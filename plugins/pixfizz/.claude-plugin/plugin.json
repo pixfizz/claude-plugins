@@ -1,0 +1,30 @@
+{
+	"name": "pixfizz",
+	"displayName": "Pixfizz Storefront",
+	"version": "0.3.0",
+	"description": "Build, launch and improve a Pixfizz storefront: Liquid templating patterns, pricing formulas, XML product templates, Shopify integration, conversion UX, storefront copy, photo book layouts, product import and launch sequencing.",
+	"author": {
+		"name": "Pixfizz Ltd",
+		"url": "https://pixfizz.com"
+	},
+	"homepage": "https://pixfizz.com",
+	"repository": "https://github.com/pixfizz/claude-plugins",
+	"license": "UNLICENSED",
+	"keywords": [
+		"pixfizz",
+		"shopper",
+		"liquid",
+		"ecommerce",
+		"personalisation",
+		"print",
+		"photo",
+		"photobook"
+	],
+	"skills": [
+		"./skills/"
+	],
+	"commands": [
+		"./commands/"
+	],
+	"defaultEnabled": true
+}

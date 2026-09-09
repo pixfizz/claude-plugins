@@ -1,0 +1,22 @@
+{
+	"name": "pixfizz",
+	"owner": {
+		"name": "Pixfizz Ltd",
+		"url": "https://pixfizz.com"
+	},
+	"metadata": {
+		"description": "Claude plugins for Pixfizz customers and partners",
+		"version": "1.0.0"
+	},
+	"plugins": [
+		{
+			"name": "pixfizz",
+			"source": "./plugins/pixfizz",
+			"description": "Build, launch and improve a Pixfizz storefront: Liquid templating patterns, pricing formulas, XML product templates, Shopify integration, conversion UX, storefront copy, photo book layouts, product import and launch sequencing.",
+			"version": "0.3.0",
+			"author": {
+				"name": "Pixfizz Ltd"
+			}
+		}
+	]
+}
