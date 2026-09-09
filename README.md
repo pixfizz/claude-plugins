@@ -5,7 +5,7 @@ platform actually behaves - the Liquid rules, the pricing engine, XML template g
 Shopify integration, and the order things have to be done in.
 
 Full setup walkthrough, including which Claude product to use and how to connect it:
-**[ai-setup.pixfizz.com](https://ai-setup.pixfizz.com)**
+**[aisetup.pixfizz.com](https://aisetup.pixfizz.com)**
 
 ## Install
 
@@ -26,7 +26,7 @@ The two plugin systems are separate and do not sync. If you use both, install in
 
 | Plugin | Version | What it covers |
 |---|---|---|
-| **Pixfizz Storefront** (`pixfizz`) | 0.3.0 | Liquid and templates, pricing formulas, XML product templates, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing |
+| **Pixfizz Storefront** (`pixfizz`) | 0.4.0 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing |
 
 Run `/pixfizz:help` after installing for a menu of everything with example prompts.
 

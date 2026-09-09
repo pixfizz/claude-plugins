@@ -91,7 +91,8 @@ it appears.
 - **Id preservation makes a design-theme import overwrite the same records.**
   Verified for design themes.
 - **It does not extend to templates** (`__print_product.yml`), where import
-  creates new records and does not remap `layout_id`.
+  creates new records and does not remap `layout_id`. See the `template-resize`
+  skill's `references/import-behaviour.md`.
 - **Whether a blank or invented layout `id:` creates a new record is NOT
   verified.** Blank `id:` is documented as accepted at template, template-option
   and print-theme level; nobody has proven it at layout level. Do not rely on it.

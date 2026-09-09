@@ -13,5 +13,7 @@ Show the user a short menu of what this plugin covers, in plain language, with o
 - **Product import** (`/pixfizz:import`) — Lightspeed/Vend CSV to Pixfizz Static Product Importer, including pricing formulas. Example: "convert this Lightspeed export for import"
 - **Photo book layouts** (`/pixfizz:layouts`) — generate or fill the frame arrangements customers pick from in the Design Tool, written straight into a design theme export. Example: "add twenty more one- and two-photo layouts to this theme"
 - **Storefront setup and launch** (`/pixfizz:launch`) — deployment models, what to have ready, phase sequence, blockers, email templates, pre-launch checklist. Example: "what do I need in place before I can configure checkout?"
+- **Variants and template options** (`/pixfizz:variants`) — sizes, finishes, imprint lines, upload slots: which object a choice belongs on, where the price goes, and why one is not showing. Example: "my finish variant shows the same price for every option"
+- **Template resizing** (`/pixfizz:resize`) — take one seed template or design theme and derive another size, or a whole size range, with the geometry rewritten and proofed. Example: "here is the 8x8 canvas, build me the other 40 sizes"
 
 Then ask which one they want to start with. Do not dump skill contents.

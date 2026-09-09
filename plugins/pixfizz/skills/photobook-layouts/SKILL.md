@@ -1,6 +1,6 @@
 ---
 name: photobook-layouts
-description: Use when adding, designing or generating layouts for a Pixfizz design theme - the photo frame arrangements a customer picks from in the Design Tool. Triggers on "add new layouts", "create photo book layouts", "we need more layout options", "fill the blank layouts", "generate a layout set", "more one-photo and two-photo layouts", "the layout picker is too thin", "design some collage arrangements", or any design theme export (__print_theme.yml) supplied with empty layouts or a request for more arrangements. Also use when layouts are untagged and the picker has lost its photo-count grouping, when a new theme has only a handful of arrangements, or when someone asks for layouts modelled on a competitor's or a reference set of thumbnails. This skill creates layouts; it does not rescale existing ones to a different page size.
+description: Use when adding, designing or generating layouts for a Pixfizz design theme - the photo frame arrangements a customer picks from in the Design Tool. Triggers on "add new layouts", "create photo book layouts", "we need more layout options", "fill the blank layouts", "generate a layout set", "more one-photo and two-photo layouts", "the layout picker is too thin", "design some collage arrangements", or any design theme export (__print_theme.yml) supplied with empty layouts or a request for more arrangements. Also use when layouts are untagged and the picker has lost its photo-count grouping, when a new theme has only a handful of arrangements, or when someone asks for layouts modelled on a competitor's or a reference set of thumbnails. This is the layout-CREATION skill; use template-resize instead when existing layouts are the wrong size for their page.
 ---
 
 # Pixfizz Photo Book Layouts
@@ -16,9 +16,8 @@ Design Tool shows them in a picker, grouped by the `tags` facet, and applying
 one copies its frames onto the customer's page. Layouts live in `layouts[]`, a
 sibling of `templates[]` in the theme export, and carry `layout: true`.
 
-**This skill creates layouts.** If the arrangements are right but the page
-size is wrong, that is a rescaling job, not a creation job - ask your Pixfizz
-contact.
+**This skill creates layouts. `template-resize` rescales existing ones.** If the
+arrangements are right but the page size is wrong, that is the other skill.
 
 ## The workflow that avoids the id problem
 
@@ -176,7 +175,7 @@ Full detail in `references/design-rules.md`. The short version:
 | `scripts/pxgrid.py` | `Page` geometry helpers, `fmt()`, grid derivation |
 | `scripts/pxload.py` | tolerant YAML loader; Pixfizz emits Ruby tags |
 
-`pxload.py` is self-contained deliberately, so each
+`pxload.py` is duplicated verbatim in the `template-resize` skill deliberately, so each
 skill stands alone. If the two are ever merged, share it and the numeric
 conventions in `pxgrid.py`.
 

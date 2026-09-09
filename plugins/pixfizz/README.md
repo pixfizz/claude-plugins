@@ -11,7 +11,7 @@ Install:
 
 `/plugin` works in a local Claude Code terminal session. In the Claude desktop app, add the
 same marketplace under Customize → Plugins → Add marketplace. See
-[ai-setup.pixfizz.com](https://ai-setup.pixfizz.com) for the full walkthrough.
+[aisetup.pixfizz.com](https://aisetup.pixfizz.com) for the full walkthrough.
 
 ## Skills
 
@@ -56,6 +56,18 @@ the Full Pixfizz and Shopify + Pixfizz phase sequences, the blocker per phase, t
 backup format and snippet-override encoding, the 14 order notification templates, vertical notes
 for photo labs, school/sports and gifting, and a pre-launch checklist.
 
+**`product-variants`** — the choices a customer makes on a product page. Which object a choice
+belongs on (commercial variants on the Product Attribute, production options on the Template),
+the seven option types and what each needs, children and triggers, the Shopper selector
+overrides, where a price actually lives, element substitutions that survive being copied, and
+the export traps that fail silently — `value_type` not `type`, booleans that import as their
+opposite, and a re-import that duplicates rather than updates.
+
+**`template-resize`** — derive a design product at a new size by rewriting the geometry in its
+export instead of rebuilding it by hand. Handles a design theme or a full template export, one
+target size or a whole size list from one seed, with per-size pricing and variant carry-through,
+a proof sheet per size and a verifier. Proven at 5 sizes and twice at 62.
+
 ## Commands
 
 | Command | Does |
@@ -70,6 +82,8 @@ for photo labs, school/sports and gifting, and a pre-launch checklist.
 | `/pixfizz:import` | Lightspeed/Vend CSV to Pixfizz import |
 | `/pixfizz:layouts` | Create or fill photo book layouts in a design theme |
 | `/pixfizz:launch` | Plan or troubleshoot a storefront setup and launch |
+| `/pixfizz:variants` | Create, review or debug variants and template options |
+| `/pixfizz:resize` | Resize a template, or build a whole size range from one seed |
 
 Skills also fire automatically when the work matches — the commands are shortcuts, not the only
 way in.

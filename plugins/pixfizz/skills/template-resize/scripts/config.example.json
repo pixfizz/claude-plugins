@@ -1,0 +1,238 @@
+{
+ "seed_dir": "/path/to/unpacked/seed",
+ "out_dir": "/path/to/out",
+ "bleed": 2.0,
+ "mirror": 2.0,
+ "preview_page_mm": 254.0,
+ "window_mm": 228.6,
+ "page_margin_mm": 6.0,
+ "furniture_line": 0.7957,
+ "wrap_label_inset_mm": 12.7,
+ "scenes": {
+  "preview-zoomx1.5": {
+   "scene_mm": 381.0,
+   "offset_y_mm": -88.9,
+   "mm_per_inch": 5.364031339031333,
+   "centre_y": 83.961111111111
+  },
+  "preview": {
+   "scene_mm": 254.0,
+   "offset_y_mm": 0.0,
+   "mm_per_inch": 4.456140350877167,
+   "centre_y": 106.947368421052
+  }
+ },
+ "scene_preference": [
+  "preview-zoomx1.5",
+  "preview"
+ ],
+ "production_pages": [
+  "canvas",
+  "gallery",
+  "mirror",
+  "color"
+ ],
+ "production_page": "canvas",
+ "production_page_layout": "gallery",
+ "clean_preview": "preview-clean",
+ "full_preview": "preview-full",
+ "definition_page_pattern": "(<page type=\"canvas\"[^>]*?)width=\"[^\"]*\" height=\"[^\"]*\"",
+ "definition_must_contain": [
+  "bleed=\"2\"",
+  "<page type=\"preview\" width=\"10\" height=\"10\" />",
+  "margin=\"0\""
+ ],
+ "literal_replacements": {
+  "canvas-8x8-2.00": "canvas-{size}-2.00",
+  "canvas8x8-2.00": "canvas{size}-2.00",
+  "8x8 Square Canvas Wrap": "{name}"
+ },
+ "regex_replacements": {
+  "^(\\s*)size: 8x8$": "\\1size: {size}",
+  "^(\\s*)orientation: Square$": "\\1orientation: {orientation}",
+  "^(\\s*)crop_aspect_ratio: 8in/8in$": "\\1crop_aspect_ratio: {W}in/{H}in",
+  "^(\\s*)price: '71\\.28'$": "\\1price: '{price}'"
+ },
+ "variants": {
+  "Canvas-Wrap": {
+   "values": [
+    "WRMRR",
+    "WRIMG",
+    "WRCOL",
+    "WRDIGI"
+   ],
+   "prices": {
+    "WRMRR": "",
+    "WRIMG": "",
+    "WRCOL": "",
+    "WRDIGI": ""
+   }
+  },
+  "Canvas-Finishing": {
+   "values": [
+    "SA",
+    "GL",
+    "FSA",
+    "FGL",
+    "FME"
+   ],
+   "prices": {
+    "SA": "",
+    "GL": "",
+    "FSA": "@uplift",
+    "FGL": "@uplift",
+    "FME": "@uplift"
+   }
+  },
+  "Canvas-Backing": {
+   "values": [
+    "CVNOBCK",
+    "CVFINBCK"
+   ],
+   "prices": {
+    "CVNOBCK": "",
+    "CVFINBCK": "5.00"
+   }
+  }
+ },
+ "copy_dirs": [
+  "assets",
+  "fonts"
+ ],
+ "empty_dirs": [
+  "images",
+  "glb_files",
+  "pdfs"
+ ],
+ "id_block_base": 1300000000,
+ "id_block_step": 1000000,
+ "sizes": [
+  {
+   "name": "8x8 Square Canvas Wrap",
+   "w": 8.0,
+   "h": 8.0,
+   "orientation": "Square",
+   "price": 71.28,
+   "in_place": true,
+   "variant_prices": {
+    "5.02": 5.02
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "8x8",
+    "products.0.custom.orientation": "Square",
+    "products.0.custom.style": "2\""
+   }
+  },
+  {
+   "name": "10x10 Square Canvas Wrap",
+   "w": 10.0,
+   "h": 10.0,
+   "orientation": "Square",
+   "price": 75.81,
+   "in_place": false,
+   "variant_prices": {
+    "5.02": 5.74
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "10x10",
+    "products.0.custom.orientation": "Square",
+    "products.0.custom.style": "2\""
+   }
+  },
+  {
+   "name": "8x10 Portrait Canvas Wrap",
+   "w": 8.0,
+   "h": 10.0,
+   "orientation": "Vertical",
+   "price": 73.77,
+   "in_place": false,
+   "variant_prices": {
+    "5.02": 5.74
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "8x10",
+    "products.0.custom.orientation": "Vertical",
+    "products.0.custom.style": "2\""
+   }
+  },
+  {
+   "name": "10x8 Landscape Canvas Wrap",
+   "w": 10.0,
+   "h": 8.0,
+   "orientation": "Horizontal",
+   "price": 73.77,
+   "in_place": false,
+   "variant_prices": {
+    "5.02": 5.74
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "10x8",
+    "products.0.custom.orientation": "Horizontal",
+    "products.0.custom.style": "2\""
+   }
+  },
+  {
+   "name": "16x20 Portrait Canvas Wrap",
+   "w": 16.0,
+   "h": 20.0,
+   "orientation": "Vertical",
+   "price": 91.37,
+   "in_place": false,
+   "variant_prices": {
+    "5.02": 13.17
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "16x20",
+    "products.0.custom.orientation": "Vertical",
+    "products.0.custom.style": "2\""
+   }
+  },
+  {
+   "name": "40x60 Portrait Canvas Wrap",
+   "w": 40.0,
+   "h": 60.0,
+   "orientation": "Vertical",
+   "price": 240.72,
+   "in_place": false,
+   "variant_prices": {
+    "5.02": 64.1
+   },
+   "variant_price_count": {
+    "5.02": 3
+   },
+   "expect": {
+    "category": "Canvas Wraps",
+    "products.0.category": "Canvas Wraps",
+    "products.0.custom.size": "40x60",
+    "products.0.custom.orientation": "Vertical",
+    "products.0.custom.style": "2\""
+   }
+  }
+ ],
+ "_note": "Trimmed to six representative rows: the in-place seed size, a square, a portrait/landscape pair, one that switches preview scene, and one that gets its wall scale reduced. Add the rest of the range to sizes[]."
+}

@@ -1,8 +1,8 @@
 {
 	"name": "pixfizz",
 	"displayName": "Pixfizz Storefront",
-	"version": "0.3.0",
-	"description": "Build, launch and improve a Pixfizz storefront: Liquid templating patterns, pricing formulas, XML product templates, Shopify integration, conversion UX, storefront copy, photo book layouts, product import and launch sequencing.",
+	"version": "0.4.0",
+	"description": "Build, launch and improve a Pixfizz storefront: Liquid templating patterns, pricing formulas, variants and template options, XML product templates, template resizing, Shopify integration, conversion UX, storefront copy, photo book layouts, product import and launch sequencing.",
 	"author": {
 		"name": "Pixfizz Ltd",
 		"url": "https://pixfizz.com"
