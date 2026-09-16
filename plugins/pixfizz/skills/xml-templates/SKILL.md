@@ -182,11 +182,15 @@ When a browser-based custom tool builds the print file itself, the definition ex
 
 ## FTP fulfillment behaviour
 
+Full detail, job tickets and diagnosis live in the `fulfillment-setup` skill.
+
+
 - **`originals/` vs `/originals/`** — the leading slash matters. Relative puts files in a
   subfolder inside the per-order folder; absolute puts them in a top-level folder at the FTP root.
 - **Original customer uploads are not sent by default.** Only generated production files go. A
   fulfillment template named exactly `_additional_files.json` (leading underscore included) is
-  required to include them. The payload schema is environment-specific — ask the platform team.
+  required to include them. It renders a JSON array of `source` / `destination` pairs; the
+  `fulfillment-setup` skill has a working body.
 - **Every custom field value inserted into a JSON job ticket needs `| escape_json`.** A value
   containing a quote, backslash or newline otherwise produces invalid JSON and the job ticket
   fails, sometimes silently.

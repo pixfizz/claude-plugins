@@ -137,13 +137,20 @@ reusing.
 
 ## Cart-level pricing: Automatic Discounts and Extra Fees
 
-Both are platform-level, configured in Main Admin, and both take a **Liquid** formula (not Ruby)
-with full cart and user context. Automatic Discounts subtract; Extra Fees add. Both return a
-numeric **amount** in site currency, not a percentage — the formula does the percentage maths
-itself. If no branch matches and the formula returns nothing, nothing is applied.
+Both are platform-level, configured in Main Admin (Automatic Discounts under **Marketing →
+Automatic Discounts**). The formula is **Liquid first**, and whatever it outputs is then evaluated
+as a pricing expression. Automatic Discounts subtract; Extra Fees add. Both return a numeric
+**amount** in site currency, not a percentage — the formula does the percentage maths itself. A
+discount must come out positive; if no branch matches, nothing is applied.
 
-Context available: `cart.orderlines`, `cart.orderlines_total`, `cart.promocode_code`, `user.*`,
-standard Liquid filters.
+Pricing variables: `orderlines_total` and `orderlines_discount` only (plus `auto_discount` in an
+Extra Fee). Liquid context: `cart` (not `cart.total`, `.shipping`, `.discount`,
+`.shipping_discount` or `.tax`), `user`, `website`.
+
+**Automatic discounts stack with promo codes by default**, and **do not combine with each
+other**: only the largest applies unless the discounts involved have **Combines** ticked. They
+run after promo codes and before Extra Fees. For building a whole offer, with dated and bundle
+formulas and a test matrix, use the `seasonal-campaign` skill.
 
 ```liquid
 {%- if cart.orderlines_total >= 250 %}

@@ -68,6 +68,21 @@ export instead of rebuilding it by hand. Handles a design theme or a full templa
 target size or a whole size list from one seed, with per-size pricing and variant carry-through,
 a proof sheet per size and a verifier. Proven at 5 sizes and twice at 62.
 
+**`storefront-audit`** — a read-only health check of the live store. Broken menu links, empty
+collections, products with no price or image, a dead Add to Cart caused by a hidden required
+upload, a custom design tool mounted twice, and indexing and sitemap state judged against whether
+the store is live yet. Every finding carries the URL and the value read.
+
+**`fulfillment-setup`** — how finished orders reach production. What to specify before a
+destination is built, filename and directory templates, JSON job tickets, sending the customer's
+original files with `_additional_files.json`, print files from custom design tools, and a
+step-by-step diagnosis for files that are missing, misnamed or unreadable.
+
+**`seasonal-campaign`** — the offer, the page, the deadline and the switch-off. When to use an
+automatic discount and when a promo code, how each behaves (including stacking and which
+discount wins), dated and bundle formulas, cutoff messaging, a test matrix and a diagnosis for
+discounts that do not apply or apply twice.
+
 ## Commands
 
 | Command | Does |
@@ -84,6 +99,9 @@ a proof sheet per size and a verifier. Proven at 5 sizes and twice at 62.
 | `/pixfizz:launch` | Plan or troubleshoot a storefront setup and launch |
 | `/pixfizz:variants` | Create, review or debug variants and template options |
 | `/pixfizz:resize` | Resize a template, or build a whole size range from one seed |
+| `/pixfizz:audit` | Read-only health check of a live store |
+| `/pixfizz:fulfillment` | Specify, review or debug how orders reach production |
+| `/pixfizz:campaign` | Plan and build a seasonal or promotional campaign |
 
 Skills also fire automatically when the work matches — the commands are shortcuts, not the only
 way in.
