@@ -33,6 +33,7 @@ These rules apply to every piece of code delivered to a Pixfizz Shopper site. Fu
 - **Full block replacement** — always return the complete updated block. Never return partial edits or ask the user to merge fragments.
 - **Code change output scale** — small/targeted edits → numbered find/replace instructions. Larger structural changes → full block. Never default to full blocks for minor edits.
 - **CSS/Liquid split** — CSS goes in `style/custom.css` only. Never write CSS inline in Liquid/HTML snippets.
+- **No new snippets on a child site** — see Snippet Conventions. Every install instruction is checked for a "create a snippet" step before it is sent.
 - **Shared snippet contract** — if a snippet is used across multiple live sites, do not remove existing variables, IDs, or JS hooks. Add defensively. Breaking a shared snippet can affect many production sites simultaneously.
 
 ---
@@ -40,7 +41,8 @@ These rules apply to every piece of code delivered to a Pixfizz Shopper site. Fu
 ## CSS Delivery
 
 - The CSS page lives at `/site/custom.css` and is loaded via `<link>` in `html.head`.
-- **All custom CSS goes in `style/custom.css`** — the per-site stub snippet.
+- **All custom CSS goes in `style/custom.css`** — the per-site stub snippet, overridden on the site.
+- **The parent's CSS is printed after the site's.** At equal specificity the parent's rule wins, so a site rule that restates a parent selector can appear to do nothing. Give it higher specificity (a leading `body`), or `!important`, and check the computed style in the browser.
 - `request.path` inside `style/custom.css` always resolves to `/site/custom.css` (a
   separate HTTP request). It cannot be used for page-specific logic in that file.
 - For path-specific inline styles, use `integrations/custom-body-scripts` instead.
@@ -239,6 +241,21 @@ Fix: replace inline nested forms with redirect links to standalone address pages
 
 ## Snippet Conventions
 
+- **Shopper child sites cannot create snippets. Check every install step for this before sending it.**
+  Only the Pixfizz parent template can create a new snippet. On a customer's Shopper site (a child
+  site), a new snippet saves in admin and then renders blank forever, with no error. So before
+  giving anyone install or setup steps, check each step: if it says "create a snippet", "new
+  snippet" or "add a snippet", rewrite it as one of these:
+  1. **Override Snippet** on a snippet that already exists and is meant to be overridden, such as
+     `style/custom.css`, `integrations/custom-body-scripts`, `website/homepage`, the active
+     navigation snippet or `header/logo`. Keep anything already in the override and add below it.
+  2. A **Pages custom type** entry, for page content.
+  3. **Template options or variants** on the product, which the site can create itself.
+  4. If a genuinely new snippet is needed, the answer is **"contact Pixfizz support"** — the
+     Pixfizz team adds it to the parent template. Never tell a customer to create it themselves.
+  A child site's Website → Snippets list shows only the snippets it has overridden, not the
+  roughly one thousand it inherits, so "I can't find that snippet" usually means it exists on the
+  parent and can be overridden.
 - Snippets are rendered via `{% snippet 'snippet-name', param: value %}`.
 - If a snippet is not found, an error is thrown unless `fallback_content: ''` is provided.
 - **Home page custom content**: goes in `website/homepage` snippet. Requires the

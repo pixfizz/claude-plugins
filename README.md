@@ -26,7 +26,7 @@ The two plugin systems are separate and do not sync. If you use both, install in
 
 | Plugin | Version | What it covers |
 |---|---|---|
-| **Pixfizz Storefront** (`pixfizz`) | 0.4.0 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing |
+| **Pixfizz Storefront** (`pixfizz`) | 0.5.1 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing |
 
 Run `/pixfizz:help` after installing for a menu of everything with example prompts.
 

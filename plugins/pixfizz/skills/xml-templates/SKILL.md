@@ -126,6 +126,32 @@ for a separate layer, even pages carrying no elements from it. Restrict it per p
 <page type="page2" ... separate-layers="">       <!-- none -->
 ```
 
+### What a layer does — pick the job first
+
+PDF layers are what PDF viewers call Optional Content Groups; the production PDF carries them as
+real layers, visible as a layer list in Illustrator or Acrobat.
+
+| Job | Attributes | Customer sees it while designing | Production file |
+|---|---|---|---|
+| Design aid only — group elements to hide them while editing | just `name` | Yes | Yes, merged into the main file; nothing changes |
+| Print but never show — cut marks, registration, die lines | `visibility="fulfillment"` | Never | Yes |
+| Split into its own file or pages — foil, white ink, a second pass | `separate-file="true"` or `separate-page="true"` | Depends on `visibility` | Separate file, or pages appended |
+
+- **Hiding a layer while editing:** assign elements to layers in the admin design tool, then switch
+  each layer on or off under **View Settings** at the top of the design tool. This affects only the
+  editing view — not the customer, not production. Use it when an element on top stops you
+  selecting the one underneath.
+- **Replacing an element that sits on a layer** (a background that will not select): check which
+  layer it is on and switch that layer on under View Settings, then select and replace it. Assign
+  the replacement to the same layer if it should keep the same production behavior.
+- **Show but never print is NOT a layer setting.** A placeholder the customer never edits is left
+  out of production. So an element marked **not editable** and **placeholder** always shows in the
+  editor and never prints — the way to show a colored backing behind white text on a transparent or
+  white substrate. The editor preview reports it as "placeholder missing", which is correct.
+- **Mirrored output for back-printing acrylic is not a setting.** A separate file for the back-print
+  artwork is supported; mirroring it is not a documented capability. Say so, and suggest contacting
+  Pixfizz support with an example of the production file needed.
+
 ## Set captions
 
 ```xml

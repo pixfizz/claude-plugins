@@ -256,6 +256,8 @@ Wire the brand into the header as part of the initial build, not as a follow-up:
 correct value and still not take effect. After every import, verify all checklist flags
 (especially `custom-home-page`) in the admin UI and set them manually if needed.
 
+**Before sending any setup steps for a child site:** no step may say "create a snippet". A child site can only **override** snippets that already exist on the parent (every snippet named below does). If a step needs a genuinely new snippet, the answer is "contact Pixfizz support". See the liquid-patterns skill, Snippet Conventions.
+
 Order of operations for a fresh child site:
 
 1. Confirm the site is a Shopper child (inherits the parent template). If not, that is the
