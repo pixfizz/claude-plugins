@@ -125,6 +125,18 @@ reference site to copy structure.
 (most Shopper snippets, parent layouts, the icon library) is inherited from the Shopper
 parent and is NOT in the tar. A small file count is normal, not a broken or partial export.
 
+**An import replaces the whole child site; it does not merge.** Importing a tar that holds
+only the changed snippets wipes every other child override (layouts, pages, the other
+snippets) and the site falls back to the parent's demo content. Never import a partial tar.
+Every import tar is the full current backup with the edited files swapped in: same members,
+same order, only the edited files replaced. If it happens, re-import the last full backup
+with the fixes merged in, then re-check the checklist flags in admin.
+
+**Ask for the backup without assets** for template, snippet, CSS or homepage work. The
+backup with assets can be very large, and its download has been seen to cancel itself on
+sites with big asset stores, while the backup without assets downloads at once. Check asset
+names in admin (Website, Assets, search) instead of downloading them.
+
 ### File format
 
 Every layout, page, and snippet is YAML frontmatter followed by a body:
@@ -156,6 +168,11 @@ Nested snippet paths flatten to filenames using double underscores:
 
 When creating a new override file, the filename uses `__` and the `name:` frontmatter uses
 `/`. Both must agree.
+
+**Check what a new child override starts with.** Overriding a parent snippet in admin has been
+seen to create an empty snippet on the child and, on other occasions, a copy of the parent's
+content. Open it before editing: if it is empty, paste the full parent content in first, or the
+section renders blank.
 
 ### The layout is what loads the storefront (critical)
 
@@ -212,6 +229,9 @@ Retheming a site is setting these values. Common ones: `style/color-primary`,
 - Reference in Liquid as `{{ 'name.jpg' | asset_url }}`.
 - Binary lives in `asset_files/name.jpg`; metadata sidecar in `assets/name.jpg.yml`.
 - On a live site, upload via Main Admin, Website, Assets. Both entries appear on the next export.
+- `asset_url` for a name that exists on neither the child nor the parent renders an empty
+  string with no error, so an `<img>` silently shows nothing. Check every new asset name on
+  the live page (empty `src`, or `naturalWidth` of 0).
 
 ### Nav override
 
@@ -248,6 +268,13 @@ Wire the brand into the header as part of the initial build, not as a follow-up:
 - **Favicon**: upload as an asset named exactly `favicon.png`, a transparent PNG, square
   ratio, max 192x192px. No snippet or admin setting needed; the platform picks it up by name.
 - The logo asset binaries (plus `.yml` sidecars) go in the same tar.
+
+### Product landing and holiday pages
+
+Shopper 24 renders configurable landing pages (seasonal and holiday pages, gift pages) from
+one JSON snippet, `product-landing/config`, plus a Pages instance per page. See
+`seasonal-campaign/references/product-landing-config.md` for the block schema and install
+steps.
 
 ### Standing up a new Shopper site from a backup
 

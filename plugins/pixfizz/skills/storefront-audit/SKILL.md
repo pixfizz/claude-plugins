@@ -25,6 +25,18 @@ quality, and `liquid-patterns` or `product-variants` once a fault is located.
 - **A hidden browser tab can lie about layout.** Chrome freezes CSS transitions in a background
   tab, so a width or position read there may be the pre-transition value. Do not report a layout
   defect from a hidden tab. Status codes, text and attributes are safe.
+- **Read raw HTML, never a summarized page.** A fetch tool that returns a model-processed
+  version of the page can report missing structured data, two H1s or off-domain links that are
+  not there. Before reporting schema (`script[type="application/ld+json"]`), H1 counts,
+  canonicals or link hosts, read them from the raw HTML (same-origin `fetch()` plus
+  `DOMParser`, or `querySelectorAll` in the tab). `&amp;` in a raw `<title>` is correct HTML;
+  only `&amp;amp;` is double encoding.
+- **Stored health results can be stale.** A stored health summary (for example a
+  `last_full_check` from the Pixfizz connector's store health) may be weeks old. Re-crawl before
+  quoting any of its findings; only the current product counts in the same response are live.
+- **A sandboxed browser can make a page look broken.** Some sandboxes block CDNs such as
+  cdnjs or Google Tag Manager, so 3D previews or PDF previews render blank there. Check from a
+  normal browser before reporting it as a site fault.
 - **Do not guess a fix for a commercial setting** (prices, discounts, shipping rates). Report
   what the page shows and leave the decision with the store owner.
 
@@ -68,11 +80,26 @@ out
 | `/sitemap.xml` | 200 with XML | 404 = the site crawl has never run. Admin -> Website Crawls. Worse if the footer links to it |
 | Title / description | Real brand text | Blank description, or a placeholder like "My Brand" |
 | Canonical | On the store's own domain | Pointing at another host |
+| Custom-domain host | A site with its own domain also serves in full on `yoursite.pixfizz.com`, with canonical, `robots.txt` and sitemap pointing at the primary domain. That is expected | Canonical or sitemap on the `.pixfizz.com` host pointing at itself instead of the primary domain |
 | Bootstrap | Major version matches the Shopper generation (4.x on Shopper 24, 5.x on v2). Compare the major number only: the bundled minor can differ, and a Shopper 24 site has reported 4.4.1 | Components written for the other generation will not behave |
 
 **Shopper admin trap (template-level).** On Shopper v2 the manage-admin "hide from search"
 toggle has been seen writing a different checklist key from the one the page head reads. Trust
 the rendered `robots` meta, never the toggle.
+
+**Sign-in and modal triggers (template-level).** A link or button that opens a modal does
+nothing, with no console error, when its target id is not on the page. Check every trigger:
+
+```js
+[...document.querySelectorAll('[data-toggle="modal"],[data-bs-toggle="modal"]')]
+  .map(a => { const t = a.getAttribute('data-target') || a.getAttribute('data-bs-target') || a.getAttribute('href');
+              return { text: a.textContent.trim(), target: t, found: !!(t && t.startsWith('#') && document.querySelector(t)) }; })
+  .filter(x => !x.found)
+```
+
+Every result is a dead control. On Shopper 24 the sign-in modal is `#modalLoginCheckout`
+(its form posts to `?login_user=t`); there is no `#modalLogin`. Custom headers copied from
+older designs often point at `#modalLogin`. A sign-in control must exist and resolve.
 
 ## Step 2 - Discover the pages
 
@@ -190,6 +217,8 @@ cart. The fault index in `shopify-integration` covers the common symptoms.
 
 - [ ] Live or pre-launch established, and the `noindex` result judged against it
 - [ ] Every menu link fetched, with its status
+- [ ] Every modal trigger on the homepage resolves, including Sign in
+- [ ] Schema, H1 and canonical findings read from raw HTML
 - [ ] Every product page opened in the tab, not just fetched
 - [ ] Page counts stated
 - [ ] Every line labelled verified live, not verified, or not checked

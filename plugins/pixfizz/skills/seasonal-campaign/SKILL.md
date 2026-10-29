@@ -1,6 +1,6 @@
 ---
 name: seasonal-campaign
-description: Plan and build a seasonal or promotional campaign on a Pixfizz storefront - the offer (automatic discount or promo code), the landing page, order cutoff messaging, banners, and the test and switch-off plan. Use for holiday, Black Friday, Mother's Day, Father's Day, Valentine's, graduation, back-to-school or any dated sale; for gift bundles ('buy 3, save 10%'), spend thresholds, first-order or customer-group offers, influencer and email codes, single-use codes, free shipping promotions, and deciding whether offers may stack. Trigger for 'campaign', 'promotion', 'sale', 'promo code', 'discount code', 'coupon', 'voucher code', 'automatic discount', 'bundle offer', 'gift guide', 'order by date', 'holiday cutoff', 'countdown', 'free shipping over', or a discount that is not applying or is applying twice.
+description: Plan and build a seasonal or promotional campaign on a Pixfizz storefront - the offer (automatic discount or promo code), the landing page, order cutoff messaging, banners, and the test and switch-off plan. Use for holiday, Black Friday, Mother's Day, Father's Day, Valentine's, graduation, back-to-school or any dated sale; for gift bundles ('buy 3, save 10%'), spend thresholds, first-order or customer-group offers, influencer and email codes, single-use codes, free shipping promotions, and deciding whether offers may stack. Trigger for 'campaign', 'promotion', 'sale', 'promo code', 'discount code', 'coupon', 'voucher code', 'automatic discount', 'bundle offer', 'gift guide', 'order by date', 'holiday cutoff', 'countdown', 'holiday page', 'gift page', 'product landing config', 'product-landing/config', 'free shipping over', or a discount that is not applying or is applying twice.
 ---
 
 # Pixfizz Seasonal Campaigns
@@ -154,6 +154,10 @@ the set without a formula edit. The custom field must be created on the site fir
   Prove both with the test matrix before launch.
 
 ## Step 4 - The page and the deadline
+
+On Shopper 24, build the campaign page with the product landing engine (countdown with order-by
+dates, hero, gift doors, spin to win, budget slider, spend-threshold offer, FAQ). See
+`references/product-landing-config.md` for the config schema and install steps.
 
 - **Landing page.** On a Shopper child site, create a `pages` Custom Type instance
   (Website -> Custom Types -> Pages) with a `page_path` that no real page uses; the page is

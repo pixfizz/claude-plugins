@@ -26,7 +26,7 @@ The two plugin systems are separate and do not sync. If you use both, install in
 
 | Plugin | Version | What it covers |
 |---|---|---|
-| **Pixfizz Storefront** (`pixfizz`) | 0.5.1 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing |
+| **Pixfizz Storefront** (`pixfizz`) | 0.6.0 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and holiday landing pages |
 
 Run `/pixfizz:help` after installing for a menu of everything with example prompts.
 
@@ -38,6 +38,16 @@ your own site, and points at the file in the public knowledge base that carries 
 
 They cover platform behaviour and implementation patterns. They do not cover Pixfizz pricing,
 packaging or commercial terms - ask your Pixfizz contact for anything commercial.
+
+## Changelog
+
+- **0.6.0** - Holiday and seasonal landing pages: new `product-landing/config` reference (block
+  types and keys, the Pages instance, wiring prices, codes and dates). Health check: read raw
+  HTML before reporting schema or H1s, custom-domain sites on the `.pixfizz.com` host, dead
+  sign-in and modal triggers, stale stored health results. Launch: a backup import replaces
+  the whole child site, new child overrides start empty, ask for the backup without assets.
+  Liquid: `asset_url` on a missing asset renders empty. Copy: no design counts, a simpler
+  storefront hero.
 
 ## Support
 

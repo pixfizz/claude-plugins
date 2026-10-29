@@ -39,7 +39,8 @@ These rules apply to ALL copy output. No exceptions.
 - Use the Eyebrow Technique when appropriate: short category line above main headline.
 - Subheadline: 1-2 lines. Formula: "For [target audience] who want to [solve pain / achieve result]."
 - One primary CTA (visually dominant) plus optionally one secondary CTA (visually subordinate).
-- Always include micro-proof adjacent to or directly below the CTA.
+- Storefront hero (Pixfizz store): headline, one short line, buttons. No row of small fact text under the buttons; shoppers do not read it. Put proof in its own section below the hero.
+- Never put design or product counts in customer copy ("54 designs"). A small number reads as a small range, and library sizes change.
 - Hero visual: show the product doing its job (UI screenshot, workflow, storefront). Never stock photos, abstract shapes, or dashboard dumps.
 - Mobile: CTA buttons min 44-48px height, full-width. Text and CTA above hero visual in stacked layout.
 
@@ -71,7 +72,7 @@ These rules apply to ALL copy output. No exceptions.
 
 ### For a storefront homepage (Recommended: 4C Blueprint)
 
-1. **Clarity** (Hero): Eyebrow + outcome headline + audience subheadline + primary CTA + micro-proof
+1. **Clarity** (Hero): Eyebrow + outcome headline + audience subheadline + primary CTA (proof goes in the section below the hero)
 2. **Comprehension** (How It Works): Features mapped to the customer's workflow (e.g. Choose > Personalise > Order > Collect or Receive)
 3. **Credibility** (Social Proof): Testimonials, metrics, case study snippets, FAQ section
 4. **Conversion** (Close): Final CTA + off-ramp for visitors not ready to convert
@@ -137,11 +138,13 @@ When writing headlines, subheadlines, or section openers, select from these patt
 Before finalizing any page copy, verify none of these are present:
 
 - [ ] Headline over 10 words or over 2 lines on mobile
+- [ ] Design or product counts in the copy
+- [ ] A row of small fact text under the hero buttons
 - [ ] Leading with features instead of outcomes/benefits
 - [ ] Vague/abstract language ("powerful", "innovative", "seamless")
 - [ ] CTA says "Submit", "Click here", or "Learn more"
 - [ ] Multiple different CTA labels on the same page
-- [ ] No social proof adjacent to CTA buttons
+- [ ] No social proof near the CTA (on a storefront, a proof section directly below the hero)
 - [ ] Anonymous testimonials (missing name, title, company)
 - [ ] Self-praise without external validation
 - [ ] Stock photos or abstract art instead of product UI

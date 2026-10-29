@@ -194,7 +194,7 @@ Fix: replace inline nested forms with redirect links to standalone address pages
 | `cms_url` | Returns URL to a CMS page, collection, or product. |
 | `preview_url` | Returns preview URL for a Project. Email use requires `share:` code. |
 | `design_tool_url` | Returns editor URL for a Project. |
-| `asset_url` | Use Pixfizz conventions. `cdn: false` for email image src. |
+| `asset_url` | Use Pixfizz conventions. `cdn: false` for email image src. An asset missing on both the child and the parent renders an empty string, no error: check new asset names on the live page. |
 | `t` | Translation filter. Supports `ns:` and `locale:` params. |
 | `parse_json` | Parses a JSON string into a Liquid object. |
 | `escape_json` | Escapes a string for use inside JSON. Still requires surrounding quotes. |
