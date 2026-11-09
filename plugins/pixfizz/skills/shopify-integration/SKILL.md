@@ -36,6 +36,14 @@ index; those files carry the full snippet listings.
 no spaces, no typos. Shopify's "Track QTY" must be **disabled**. For photo prints, set
 `pixfizz.adjust_cart_qty` to `false`.
 
+**Metafield definitions must be in the `pixfizz` namespace.** The Shopify admin's definition form
+fills the namespace and key as `custom.<name>`: click the line under the Name field and change it to
+`pixfizz.<key>`. A definition left in `custom` is never read by the integration.
+
+**Publish an imported design to a collection before testing it on Shopify.** The Pixfizz side resolves
+the SKU from the site's published design products; a freshly imported design is not among them until it
+is in a collection.
+
 **Edit ID-mapping CSVs in a plain-text editor, never Excel.** Excel silently reformats long
 numeric Shopify IDs into scientific notation and corrupts the mapping.
 
@@ -130,6 +138,8 @@ Dawn v14 puts this in `snippets/buy-buttons.liquid`, inside the product form. Ot
 | "Personalize" reverts to "Add to cart" after a variant change | Dawn's Section Rendering API overwrites `innerHTML` of `product-form__add-button`. Rename the class to something like `pixfizz-launch-btn` |
 | Customer gets two order emails | Both systems are notifying. Blank the redundant Pixfizz templates for lifecycle events Shopify already covers |
 | Static products not landing in Pixfizz | Bundle/options app restructuring the line; property name mismatch; no matching static product `code` |
+| A photo-prints product opens the single-photo editor (one photo, one size) | The store's launch handler is an older copy that always calls `launchProduct`. It must branch: `{%- if integration_type == 'photo-prints' -%}Pixfizz.Shopify.launchPhotoPrints(parameters){%- else -%}Pixfizz.Shopify.launchProduct(...){%- endif -%}`, keeping the existing `launchProduct` arguments |
+| A newly imported design does nothing on the Shopify product | The design is not published to a collection on the Pixfizz site yet, or the metafield sits in `custom` instead of `pixfizz` |
 
 ## Scoping notes
 

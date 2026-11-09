@@ -115,6 +115,14 @@ the site the option actually lives on.
 else becomes a `<select>`. Children and triggers still work. A selector that only
 exists in `product/px-options` will not be there.
 
+**In the photo prints flow (`/site/prints`), options render per size and only on the
+Cropping & Options screen**, one block per size that has prints, never on the size
+screen. Only `multiple_choice` options are listed (with the children their chosen
+value triggers); the control follows `option.custom.selector`.
+
+**Upload size limits differ by component**: `px-image-upload` defaults to 50 MB,
+`px-file-upload` to 150 MB.
+
 ## 5. Pricing (platform)
 
 **The price goes on the variant *value*, never on the variant type and never on the
@@ -172,6 +180,12 @@ silent — each one has shipped at least once.
   custom tool writes.
 - **`hide_from_cart: true` on every file upload**, or the customer sees `db:374` in
   their cart.
+- **`hidden`, `read_only` and `hide_from_cart` on variant types survive a template
+  import** (set inside `custom`).
+- **Variant values reorder only from the variant type's values table**, not from a
+  value's edit form. To convert existing values, edit them in place and add the rest;
+  do not re-save the variant type form just to rename it (an unset control type saves
+  as `dropdown`).
 - **`target_element_name` can point at nothing.** An imprint option bound to an
   element name that exists on no page imports cleanly and does nothing. Check the
   binding; do not invent the element.

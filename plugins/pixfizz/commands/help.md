@@ -17,6 +17,7 @@ Show the user a short menu of what this plugin covers, in plain language, with o
 - **Template resizing** (`/pixfizz:resize`) — take one seed template or design theme and derive another size, or a whole size range, with the geometry rewritten and proofed. Example: "here is the 8x8 canvas, build me the other 40 sizes"
 - **Site health check** (`/pixfizz:audit`) — read-only pass over a live store: broken menu links, empty collections, $0.00 prices, a dead Add to Cart, a design tool loaded twice, indexing and sitemap. Example: "audit mystore.com before we launch"
 - **Fulfillment** (`/pixfizz:fulfillment`) — how orders reach production: FTP or HTTP delivery, file naming, job tickets, sending original files, and why files did not arrive. Example: "our lab says order 1234 never reached the hot folder"
+- **Your own designs** (`/pixfizz:designs`) — turn a designer's PSD or a finished PDF into a design customers personalize, in the design tool or in a studio (greeting cards, business cards, calendars). Example: "put these five holiday card PSDs we bought into our Greeting Card Studio"
 - **Seasonal campaigns** (`/pixfizz:campaign`) — the offer, the landing page, order cutoff messaging and the switch-off, using automatic discounts or promo codes. Example: "set up a buy any 3, save 10% holiday gift bundle"
 
 Then ask which one they want to start with. Do not dump skill contents.

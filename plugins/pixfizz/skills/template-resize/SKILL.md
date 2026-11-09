@@ -163,6 +163,17 @@ cd pkg && tar czf ../NAME.tar.gz ./assets ./fonts ./glb_files ./images ./pdfs ./
 ```
 
 Confirm the tar entry list matches the source, so no image or asset was dropped.
+
+Before packing, also check (each one fails an import outright):
+- **Every font, design, option and layout name is 32 characters or fewer.** A longer font name fails the whole
+  import ("Name is too long"); fonts listed before it are created anyway, the template is not.
+- **Number values stay numeric.** `min` and `max` on number options export as
+  `!ruby/object:BigDecimal 9:0.1e1` (1.0). A loader that turns unknown tags into strings writes back
+  `'9:0.1e1'` and the import fails ("Min is not a number"), leaving the template, its products and the first
+  design behind to delete before retrying. Write the tag back as a float.
+- The top-level `category:` in `__print_product.yml` is the **template** category; the indented `category:`
+  lines under `products:` are **product** categories. Independent; either can be changed.
+- The product's fulfillment code is not in the export: set it on each product after the import.
 Name the file after the rule used when an aspect change was involved
 (`...-RESIZED-margin.tar.gz`) so it stays traceable.
 

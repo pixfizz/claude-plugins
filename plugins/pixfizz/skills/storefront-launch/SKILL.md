@@ -74,12 +74,27 @@ _Longest phase. Can run in parallel with Phase 1 if assets are ready._
 **Blockers:** Complete product catalog, pricing structure, and product images.
 Pricing must be fully confirmed before launch — changes after go-live cause friction.
 
+**After any template import** (platform-level):
+- The product's **fulfillment code is not in a template export**: a product created by an import has none and
+  falls to the site default. Set it on the product page.
+- **Product custom field values travel, stale ones included** (an expired promotion line arrived on the target).
+  Check and clear them.
+- **Design custom field values are kept only where the target site has a definition for that field** (a design's
+  display name and meta title were dropped on a site without them). Create the definitions first.
+- In a rewritten export, keep number values numeric: `!ruby/object:BigDecimal 9:0.1e1` is 1.0. Written back as the
+  string `'9:0.1e1'` the import fails ("Min is not a number") and leaves a half-made template behind.
+
 ### Phase 3: Checkout Configuration
 - Connect payment gateway (Stripe typical)
 - Configure shipping rules and rates
 - Set up tax handling
 - Configure order confirmation and notification emails (14 templates available)
 - Set minimum order amounts if required
+
+- **Website title** (Settings → General): the Terms and Shipping pages and the services heading print the
+  company name from this setting, not from the brand snippet. A blank or old title shows there.
+- **Shipping service formulas**: a formula of `0` is free at checkout. Open each service and confirm.
+- **A site with one shipping method shows no method picker**; the method appears as a fee line.
 
 **Blockers:** Payment gateway credentials, shipping rate structure, tax registration info.
 
@@ -395,3 +410,12 @@ generic Pixfizz copy that should be replaced with your own brand voice.
 - [ ] Retail pricing confirmed and validated against your own rate card
 - [ ] Shipping rules tested with real address(es)
 - [ ] Kiosk mode tested on intended hardware (if applicable)
+- [ ] Social sharing image: a 1200 x 630 JPG named exactly `og-preview-image.jpg` in the site's Assets (logo on
+      the brand background at least). Without it every shared link shows the parent's stock camera photo
+- [ ] Website title set (it prints in the Terms and Shipping pages) and every shipping formula checked
+- [ ] Photo prints: every prints link is `/site/prints?collection=<path>` (without `collection` the page lists
+      nothing), and the prints collection holds cut print templates only
+- [ ] Account pages: to move a site to account v2, set `account-v2` **and** every sub-flag
+      (`account-v2-dashboard`, `-projects`, `-carts`, `-orders`, `-galleries`, `-dates`, `-addresses`, `-info`);
+      v1 account snippet overrides stop applying on v2, so port anything they carried first
+- [ ] Every product created by a template import has its fulfillment code set

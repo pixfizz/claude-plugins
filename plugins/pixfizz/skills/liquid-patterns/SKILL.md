@@ -33,6 +33,7 @@ These rules apply to every piece of code delivered to a Pixfizz Shopper site. Fu
 - **Full block replacement** — always return the complete updated block. Never return partial edits or ask the user to merge fragments.
 - **Code change output scale** — small/targeted edits → numbered find/replace instructions. Larger structural changes → full block. Never default to full blocks for minor edits.
 - **CSS/Liquid split** — CSS goes in `style/custom.css` only. Never write CSS inline in Liquid/HTML snippets.
+- **Scope CSS that touches a platform component** — any `px-*` class (upload, crop, prints, options) is styled only inside a wrapper class, the tool root or a page body class, never as the bare class, and never with `!important` on the bare class. A bare rule on a shared component broke photo print cropping on every site that inherited it. Test every page that uses the component: Photo Prints (desktop and phone), upload Adjust, cart, checkout, kiosk.
 - **No new snippets on a child site** — see Snippet Conventions. Every install instruction is checked for a "create a snippet" step before it is sent.
 - **Shared snippet contract** — if a snippet is used across multiple live sites, do not remove existing variables, IDs, or JS hooks. Add defensively. Breaking a shared snippet can affect many production sites simultaneously.
 
@@ -194,7 +195,7 @@ Fix: replace inline nested forms with redirect links to standalone address pages
 | `cms_url` | Returns URL to a CMS page, collection, or product. |
 | `preview_url` | Returns preview URL for a Project. Email use requires `share:` code. |
 | `design_tool_url` | Returns editor URL for a Project. |
-| `asset_url` | Use Pixfizz conventions. `cdn: false` for email image src. An asset missing on both the child and the parent renders an empty string, no error: check new asset names on the live page. |
+| `asset_url` | Use Pixfizz conventions. `cdn: false` for email image src. An asset missing on both the child and the parent renders an empty string, no error: check new asset names on the live page. Inside a quoted `{% snippet %}` argument the inner quotes end the string: capture the URL first (`{%- capture u -%}{{ 'file.pdf' \| asset_url }}{%- endcapture -%}`) and pass the variable. |
 | `t` | Translation filter. Supports `ns:` and `locale:` params. |
 | `parse_json` | Parses a JSON string into a Liquid object. |
 | `escape_json` | Escapes a string for use inside JSON. Still requires surrounding quotes. |
@@ -304,6 +305,31 @@ Pixfizz redirect format: JSON array of arrays with regex patterns.
 
 - Start anchor `^`, optional trailing slash `/?`, end anchor `$`.
 - System paths (cart, checkout, account, order-confirmation) do not need redirects.
+- Rules apply to `/site/...` storefront paths too: `["^/site/shop/<old>/?$", "/site/<new>"]`.
+- One rule can catch a collection and all its sub-collections:
+  `^/site/shop/<collection>[^?]*/?(\?.*)?$` (in the JSON the `\?` is written `\\?`). It also catches any other
+  collection whose path starts with the same name, so check first.
+- Create the target page before the redirect, or visitors land on the 404. A saved rule works within seconds.
+- Whether a rule can match one product by its query string (`/site/product?product=<id>`) is not confirmed. To
+  retire such a product, set it sold out and hidden from search instead.
+- In a page body, `{% redirect_to '/site/<path>' %}` (or a variable) returns a real server redirect and keeps a
+  query string. Put it in a condition at the very top of the page, and try it on a test page first: a Liquid
+  error in any branch breaks the page for every visitor.
+
+## Filters on collection and product pages
+
+- `collection_filters` (three fields) drives the **collection** page; `collection_pdp_filters` (five fields)
+  drives the filter rows on the **product** page, also on collections without `pdp_layout`. A choice that is only
+  a collection filter (Orientation, say) does not appear on the product page until it is in
+  `collection_pdp_filters`.
+- Product page rows are dependent: the second row lists only the values that exist for the first row's choice.
+  When a row's default does not exist for that choice, the page falls back to one that does.
+- `collection_pdp_filters` is Liquid-rendered, so a row can be shown or hidden per value
+  (`{% unless request.params['size'][0] == '4x4' %}...{% endunless %}`).
+- **When filters vanish on one site, diff its filter snippet overrides against the parent first.** A site copy
+  made earlier for another reason can still carry an old line that stops every filter showing.
+- A snippet just changed can be served in its old version for about two minutes from some servers. Wait and
+  reload before deciding a change did not work.
 
 ---
 

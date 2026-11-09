@@ -34,7 +34,7 @@ are defined at all, elements snap exclusively to those values** — a partial li
 
 | Attribute | Meaning |
 |---|---|
-| `unit` | Unit system for every dimension. `inch` or `mm`. One system per product. |
+| `unit` | Unit system for every dimension. `inch` or `mm`. One system per product. **A definition with no `unit` reads as mm**: always set it. |
 | `dpi` | Target resolution for production output |
 | `output` | `pdf` or `jpeg` |
 | `minimum-dpi` | Minimum acceptable image resolution; drives the quality warning in the Design Tool |
@@ -74,6 +74,9 @@ The hidden preview set is a standard pattern and worth copying:
   binding map.
 - **`gutter`** hides artwork from the user in the area between pages, so content is not lost in
   the binding.
+- **Read the print size from the first set that is not a preview.** Many templates put the preview set first, so
+  code or a person taking the first `<page>` of the definition gets the preview size, not the print size.
+- **Fractional rotation works** (`rotate="-4.2702"` prints as set; parts past the page edge are clipped).
 - **Comma-separated `type` in a `grow="true"` set cycles.** `type="page01,page02"` uses `page01`
   on the first addition and `page02` on the second, then repeats. Only meaningful inside a grow
   set.
@@ -223,9 +226,32 @@ Full detail, job tickets and diagnosis live in the `fulfillment-setup` skill.
 - **The job ticket folder must be named exactly `Job Tickets`**, that capitalisation, or FTP
   routing fails.
 
+## Text elements in design pages
+
+- **`kerning` is in points**, whatever the page unit. From CSS letter spacing in em: `kerning` = em x `fontsize` (mm)
+  x 2.8346. Measured in a production PDF.
+- **Leave headroom in a box with `shrink="true"`.** In a box exactly 1.2 x `fontsize` tall, some sizes print one
+  shrink step (about 0.5 pt) smaller because of rounding. Make the box about 1.3 x `fontsize` tall with
+  `valign="center"`.
+- **There is no text-transform.** Capitals come from what is typed, or from a font that maps lowercase to capitals.
+- **Font names over 32 characters fail the whole import** ("Name is too long"). Check every font, design, option
+  and layout name before packing an export.
+- **Overlay-style card designs** (one full-page picture over ordinary image elements, with transparent windows)
+  cannot be turned to the other orientation by moving frames: the art has to be recomposed. Check element names
+  before marking anything a placeholder.
+
+## Adding a preview set to a template that already has projects
+
+On a book template, a project created **before** a preview set was added lists its pages without the preview page,
+so the platform treats its real page 1 as the preview: hidden in the editor, left out of production. The lab sees
+"missing last page" or "the last page is a double side"; new projects are fine. Check the project's admin Pages
+list for a "preview" row in position 2. Fix the order, not the template: render page 1 alone from its admin page
+and put it in front of the production PDF (and a blank page in front of any separate-layer PDF). Prefer adding
+preview sets before a template sells.
+
 ## Before delivering a definition
 
-- [ ] One measurement system for the whole product
+- [ ] `unit` set, and one measurement system for the whole product
 - [ ] Exactly one `grow="true"` set, if the product grows at all
 - [ ] Preview set hidden from editor and excluded from fulfillment
 - [ ] `output-name` grouping produces the file split production expects

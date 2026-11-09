@@ -78,6 +78,13 @@ destination is built, filename and directory templates, JSON job tickets, sendin
 original files with `_additional_files.json`, print files from custom design tools, and a
 step-by-step diagnosis for files that are missing, misnamed or unreadable.
 
+**`studio-designs`** — bring a lab's own designs into a studio or design product. Which route
+each studio offers today (Greeting Card Studio store designs, the Business Cards site designs file,
+Calendar Studio, the design tool for anything with a template), what to ask the designer for, and
+four scripts: read a layered PSD or a finished PDF into photo windows and live text with a proof,
+build a design import on top of a real export of your template, build the Greeting Card Studio
+store library, and build a Business Cards site designs file.
+
 **`seasonal-campaign`** — the offer, the page, the deadline and the switch-off. When to use an
 automatic discount and when a promo code, how each behaves (including stacking and which
 discount wins), dated and bundle formulas, cutoff messaging, a test matrix and a diagnosis for

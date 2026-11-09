@@ -130,6 +130,15 @@ or negative variant adjustments. Two workarounds:
 **Whether the platform sums two priced variants on one product is untested.** Do not assert it.
 Either test it with a real order line, or fold the surcharge into a single priced variant.
 
+**Never use `extra_pages` in an option value price on a single-page product with a preview page.**
+On a single-page product whose definition has a preview set (a puzzle, a poster with a preview
+page), `extra_pages` is 1 in the cart. An option priced `<add-on> + extra_pages * <add-on>` then
+charges the add-on twice in the cart while the product page and `price_forecast` show it once.
+Price such options without `extra_pages`.
+
+**A variant price written as `<price> * cut_print_quantity` on a template that is not a cut print**
+still applies: `price_forecast` added each value's price once on top of the base price.
+
 **Photo enhancement add-ons charge per image, not per print quantity.** The standard behaviour of
 multiplying the option price by quantity is wrong here; the formula must flatten the multiplier.
 The canonical snippet is not locked in the reference — confirm against the live site before
@@ -158,6 +167,27 @@ formulas and a test matrix, use the `seasonal-campaign` skill.
 {%- elsif cart.orderlines_total >= 150 %}
     orderlines_total * 0.15
 {%- endif %}
+```
+
+**A percentage discount rounds the saving, half up**: `sum | times: pct | divided_by: 100.0 | round: 2`
+rounds the amount saved, not the discounted total. A custom page or tool that shows the
+discounted price must round the same way, or it shows a saving one cent low on some carts.
+
+**More items, bigger percentage** (one offer, so not a promo code): count the eligible lines in
+Liquid and return the amount for the tier reached. A shape reported working on a store (check the
+orderline property names and whether "items" means lines or copies on the site before use):
+
+```liquid
+{%- assign n = 0 -%}{%- assign eligible = 0 -%}
+{%- for line in cart.orderlines -%}
+  {%- if line.product.category == '<category>' -%}
+    {%- assign n = n | plus: line.quantity -%}
+    {%- assign eligible = eligible | plus: line.price -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if n >= <tier 2 count> -%}{{ eligible | times: <rate 2> }}
+{%- elsif n >= <tier 1 count> -%}{{ eligible | times: <rate 1> }}
+{%- endif -%}
 ```
 
 **Property-name trap:** it is `cart.promocode_code`, not `cart.promocode`. The short form is not a

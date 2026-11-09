@@ -246,6 +246,16 @@ The template's sets all carry `fulfillment="false"`, so **the platform renders n
 line. Everything production receives for it travels through `_additional_files.json` (and the
 job ticket, if the production system needs it listed). No template, no file, and no error.
 
+**A tool on a design product is different.** A design product's page creates a project, so the
+order is a project of that design and production gets the design render. A tool that also writes
+a print file option on such a product sends both: check which one production should use.
+
+**Products created by a template import have no fulfillment code** (it is not in the export) and
+fall to the site default destination. **On a site that inherits products from another site**, a
+product with no child product on the site can also route to the site's default instead of the
+code on the parent's product. Set the code on each product; orders that already went to the wrong
+place need refulfilling (ask Pixfizz support if you cannot do it from your admin).
+
 ## Operational rules
 
 - **Files on the Pixfizz FTP drop are deleted automatically after about a week.** The production

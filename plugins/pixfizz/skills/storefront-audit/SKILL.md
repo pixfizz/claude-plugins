@@ -81,6 +81,7 @@ out
 | Title / description | Real brand text | Blank description, or a placeholder like "My Brand" |
 | Canonical | On the store's own domain | Pointing at another host |
 | Custom-domain host | A site with its own domain also serves in full on `yoursite.pixfizz.com`, with canonical, `robots.txt` and sitemap pointing at the primary domain. That is expected | Canonical or sitemap on the `.pixfizz.com` host pointing at itself instead of the primary domain |
+| Social sharing image | `og:image` on the home page is the store's own `og-preview-image.jpg` | The parent's stock camera photo: every shared link shows it. Upload a 1200 x 630 JPG with that exact name |
 | Bootstrap | Major version matches the Shopper generation (4.x on Shopper 24, 5.x on v2). Compare the major number only: the bundled minor can differ, and a Shopper 24 site has reported 4.4.1 | Components written for the other generation will not behave |
 
 **Shopper admin trap (template-level).** On Shopper v2 the manage-admin "hide from search"
@@ -144,8 +145,14 @@ Reading the rows:
   a missing page, so this is reliable. Report every one with the menu it came from. A menu
   pointing at a collection that was never created is the common cause before launch.
 - **`comingSoon: true` on a collection** is an empty collection: the page renders but has no
-  products. Verified on Shopper 24; other templates may word it differently, so confirm by eye
-  on the first one.
+  products (or every design in it is unpublished). Verified on Shopper 24; other templates may
+  word it differently, so confirm by eye on the first one. A collection marked `unpublished`
+  only loses its Shop All tile: its page still opens by direct link.
+- **Terms and Shipping pages** print the company name from the platform Website title setting.
+  A placeholder or another company's name there is a finding.
+- **Filters missing on one site** (a collection or product page showing no filter rows while
+  others do): compare the site's filter snippet overrides with the parent; an old copy can stop
+  every filter showing.
 - **`priceEls > 0`** marks a product page. Carry those URLs into step 4.
 - **Missing description** on product and collection pages is an SEO finding, low severity.
 - **Relative menu links.** A menu link written without its leading slash works from the homepage
