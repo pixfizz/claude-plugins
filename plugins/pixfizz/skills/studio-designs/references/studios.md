@@ -25,14 +25,88 @@ not create options.
 
 ## Greeting Card Studio: store designs (the lab's own designs in the studio)
 
-Studio 0.5.0 and later. The lab's own card designs sit in the studio next to the Pixfizz and MSP designs, priced from
-the lab's own card products. Each store design keeps exactly the card type and orientation its template has.
+The lab's own card designs sit in the studio next to the Pixfizz and MSP designs, on the lab's own card products and
+at their prices. Each design keeps exactly the card type and orientation its template has (one card type, one
+orientation, offered as such). There are two kinds; nearly every retail design is the first.
 
-**What a store design is**
+| Kind | Studio | Front | Back and inside | Builder |
+|---|---|---|---|---|
+| **Live front** | 0.7.2+ | photo windows and words live, art above or below the photos kept | photo windows and words live | `scripts/gcs_store_live.py` from design exports |
+| Fixed front | 0.5.0+ | one finished picture (`cover`) | logo, photo and message by fixed names | `scripts/gcs_store_library.py` from a template export |
+
+### Live front: what the studio needs
+
+A design qualifies when all of these hold. The builder checks each one and prints PROBLEMS for anything it cannot place.
+- It sits on the lab's own **5 x 7 in card product**, flat two-sided (pages `front` and `back`) or folded (pages
+  `outside` and `inside`). Any design code; MSP-origin designs the lab copied onto its own products qualify too.
+- **Photo windows** are image elements with `placeholder="true"` OR a name starting with `placeholder`
+  (case-insensitive, e.g. `Placeholder 3`). Anything else is art.
+- **Words** are text elements with `edit="true"`. Text without it is part of the art.
+- Up to 12 or more photo windows per face is fine; art drawn above a photo (a frame, a bow) is kept above it.
+
+How the builder turns a design into the studio's format (the same method as the MSP designs):
+- The art of each face is cut into **plates**: everything below the first live element, then the art between live
+  elements, so art above a photo stays above it. All plates of a design go in one atlas image (`-a-<key>.webp`,
+  `-t.webp` for small views).
+- Photo windows and words stay live on top, at their exact boxes, rotation, font, size, color and alignment.
+- A photo window with a **mask** (arch, circle) gets its mask as a small PNG (`-m-<hash>.png`).
+- The site fonts the words use are shipped as `woff2`, cut to Latin characters so each stays well under 300 KB.
+- The hand-off map (`map` in the library): for every live element its page, its name when unique on the page, and
+  its box in page mm, written in the same pass as the studio keys, so they always match. At Add to cart the studio
+  finds each element by name, else by box (within 3 mm).
+
+Export quirks to know (seen in real exports, 20 Nov 2026):
+- `left` and `top` on an image are its **crop offset inside the box, not its position**. A missing `x` or `y` is 0.
+  Never read `left`/`top` as a position.
+- Exports carry extra pages (`preview-front`, `preview-back`, `preview-both`, `backup`), not always flagged as
+  previews. Only `front`, `back`, `outside` and `inside` are card faces.
+- Several elements can share a name (or have none); the box fallback covers them.
+
+### Live front: steps
+
+1. **List the designs.** From the lab: which designs, on which products. Read the products' templates and variants
+   with the Pixfizz connector (`product_get`). Note the product id per card type and orientation, e.g. flat
+   portrait and flat landscape. Designs in other sizes (4 x 5.5, 6 x 8.5) wait: the studio prices one size.
+2. **Export each design**: `admin.pixfizz.com/site/<site>/admin/print_theme/export_print_theme/<design id>` (one file
+   per design, the file name starts with the site). Unpack each into its own folder.
+3. **Build the library** (needs `pyyaml lxml pillow fonttools brotli`):
+   `OCC=christmas OCC_NAME=Christmas MIN_UNITS=<product minimum> python3 scripts/gcs_store_live.py <tag> lib/ <export dirs>`
+   `<tag>` is short and new per library (e.g. `vh`, `retail`): never reuse the tag of a fixed-front library on the
+   same site. Read PROBLEMS: every line is something the customer would see wrong. Fix the design in the admin and
+   export again; never edit the output.
+4. **Look before uploading.** Open each front preview (`gcs-store-<tag>-<key>.webp`) next to the design in the admin.
+5. **Upload** every file in `lib/` to the site's Assets (keep the names). Then write
+   `gcs-store-<tag>-files.json` as `{"v": "<date>", "files": {"<asset name>": "<asset url>", ...}}` from the asset
+   list (`assets_list` in the connector), upload it, read its URL.
+6. **Publish** the designs to one collection kept out of the menu (the studio reads it by name).
+7. **Mount**: on the studio page (Pages, the instance holding `product/greeting-card-studio`) add
+   `gcs_store_collection: '<collection>'`, `gcs_store_products: 'flat2-p:<id>,flat2-l:<id>'` (one entry per card type
+   the designs sit on: `flat2-p`, `flat2-l`, `fold-p`, `fold-l`), `gcs_store_files: '<files index URL>'`. Add
+   `gcs_store_paper_variant` / `gcs_store_envelope_variant` when those products name the variants differently.
+   Test on a hidden page first. Never an apostrophe in a value.
+8. **Check on the live page**, desktop and phone, every design:
+   - the gallery tile shows "Flat · N photos" and the right price;
+   - the front shows the art, a window per photo, the words; type a long family name;
+   - add photos (all windows; the studio waits until every window has one), crop one, swap two;
+   - back side, paper and quantity, envelopes, proof, Add to cart;
+   - open the cart project in the design tool: every photo in its window, the typed words on the page, nothing moved;
+   - generate the production PDF of a test order.
+   Report each as checked or not verified.
+
+### Live front: what it does not do yet
+- Sizes other than 5 x 7 (4 x 5.5, 6 x 8.5) and switching between versions of one design ("linked layouts").
+- Text on a curve or with mixed styles in one line shows as one plain style.
+- A "Your logo" slot on a live design (logos are a fixed-front feature).
+
+### Fixed front (corporate cards)
+
+Studio 0.5.0 and later. Use only when the whole front is one finished picture and the back and inside carry a logo,
+a photo and a message.
+
 - A design on the lab's **own** 5 x 7 in card template: folded (pages `front`, `outside`, `inside`, `back`) or flat
   two-sided (`front`, `back`). Portrait or landscape is read from the front page.
-- The **front is one fixed picture**: one image named `cover`, the whole artwork with its bleed. No photo, no words
-  to change. A flat PDF or PNG is ideal; for a PSD, put every front type layer in `bake`.
+- The **front is one fixed picture**: one image named `cover`, the whole artwork with its bleed. A flat PDF or PNG is
+  ideal; for a PSD, put every front type layer in `bake`.
 - **Back and inside** are plain white and carry only these elements:
 
 | Page | Images | Text |
@@ -61,21 +135,11 @@ library (the studio's own "Your own design" replaces them).
    `python3 scripts/gcs_store_library.py <site tag> lib/ <unpacked template export> [more exports]`
    It writes `gcs-store-<tag>-designs.json`, a front picture per design (`.webp`), the sample logo and photo, and the
    fonts the templates use (`.woff2`) so the studio shows the print fonts.
-3. Upload every file in `lib/` to the site's Assets. Read back each asset's URL.
-4. Write `gcs-store-<tag>-files.json` as `{"v": "<date>", "files": {"<asset name>": "<asset url>", ...}}` with every
-   file from step 2, upload it too, and read its URL.
-5. Publish the designs to a collection (kept out of the menu).
-6. Add to the studio page's settings (the page content holding `product/greeting-card-studio`):
-   `gcs_store_collection: '<that collection>'`, `gcs_store_products: 'fold-p:<product id>,flat2-l:<product id>'`
-   (one role per card product the designs sit on), `gcs_store_files: '<URL of the files index>'`. If those products
-   name the paper or envelope variants differently, add `gcs_store_paper_variant` and `gcs_store_envelope_variant`.
-   All three main settings or store designs stay off. Never an apostrophe in a value.
-7. Open the studio: the designs show under their own occasion, in their own orientation only, at their product's
-   price. Open one, add a logo, change the message, check the proof, add to cart.
+3. Upload, files index, collection and mount as in the live-front steps 5 to 8.
 
-**Store products and variants.** The studio sends only its own variants (paper, finish, corners, envelope and the
-envelope printing ones). Any other variant on the store products (a proof or rush option) is not sent and, if it is
-required, blocks Add to cart.
+**Store products and variants (both kinds).** The studio sends only its own variants (paper, finish, corners,
+envelope and the envelope printing ones). Any other variant on the store products (a proof, rush or size option) is
+not sent and, if it is required, blocks Add to cart: make it optional with a default, or leave the product out.
 
 ## Business Cards: site designs file
 

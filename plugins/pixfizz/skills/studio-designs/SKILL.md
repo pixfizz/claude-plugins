@@ -22,8 +22,8 @@ Ask which product the design is for, then pick the route from this table. Detail
 | Product | Route today | What the customer gets |
 |---|---|---|
 | Any design product (cards, invitations, announcements, posters, anything with a template) | **Design tool route**: a design on the lab's own template | Opens in the Pixfizz design tool: photos into the windows, words edited in place |
-| Greeting Card Studio, a design whose front is finished art (no photo, no words to change on the front) | **Store designs**: designs on the lab's own 5 x 7 folded or flat two-sided card templates, plus a library file | In the studio next to the Pixfizz designs, fixed front, logo, photo and message on the back and inside |
-| Greeting Card Studio, a design with photos or words on the front | Design tool route for now | The studio cannot show these yet; sell the design as its own card product |
+| Greeting Card Studio, the lab's own card designs, with photo windows and words on the front (the usual case) | **Store designs, live front** (studio 0.7.2+): the lab's designs on its own 5 x 7 flat two-sided or folded card products, plus a library built from the design exports | In the studio next to the Pixfizz designs: photos and words editable on the front, back and inside, the card's own price, paper and envelopes |
+| Greeting Card Studio, a corporate card whose front is one finished picture | **Store designs, fixed front** (studio 0.5.0+) | Fixed front; logo, photo and message on the back and inside |
 | Business Cards (3.5.0 and later) | **Site designs file**: one JSON plus images on the lab's assets | In the business card tool before the shared designs: the customer types their details, adds a logo or photo |
 | Calendar Studio | **Copy a studio design** on the lab's own calendar template and swap the art | In the studio with the lab's art, month grids and photo layouts kept |
 | Other studios (Photo Book, Collage, Puzzle, Mug, Pet, wall studios) | No own-design intake yet | Say so. Offer the design tool route where the product has a normal template |
@@ -40,8 +40,8 @@ Ask which they have, and get the file before promising anything.
   live text are separate, so the customer can change every word and the design can be rebuilt in other formats.
 - **Finished flat file (PDF, AI saved with PDF content, PNG, JPG).** Every word is part of the picture and stays as
   it is. Photo windows are found from the flat gray "your photo here" areas, or the lab says where they are. Good
-  for a studio front (the Greeting Card Studio store front is a fixed picture anyway) and for designs where only
-  the photo changes.
+  for designs where only the photo changes. For the Greeting Card Studio, designs that are already on the lab's
+  site need no file at all: the design export is the source (`references/studios.md`).
 
 What to ask the designer for is in `references/file-prep.md`: the page size with bleed, 300 dpi, RGB, the fonts
 as files (and the right to use them on a website), one file per printed page, photo windows named or marked.
@@ -88,7 +88,9 @@ names must be 32 characters or fewer, or the import fails.
 | Route | Command |
 |---|---|
 | Design tool | `python3 scripts/build_design.py --seed <export> --layout out/ --out build/ --samples a.jpg,b.jpg` |
-| Greeting Card Studio store design | the same with `--profile gcs-store`, then `scripts/gcs_store_library.py` (see `references/studios.md`) |
+| Greeting Card Studio, designs already on the site | no build: export each design, then `scripts/gcs_store_live.py` (see `references/studios.md`) |
+| Greeting Card Studio, a new design from a PSD | the design tool build first, import it on the card template, then the same as above |
+| Greeting Card Studio, fixed-front corporate card | `--profile gcs-store`, then `scripts/gcs_store_library.py` |
 | Business Cards site designs | `python3 scripts/bc_site_designs.py --trim 88.9x50.8 --tag <short site tag> --out build/ out1/ out2/ ...` |
 
 The build stops on anything the platform would refuse or the studio would not read: a page name or size that does
@@ -115,6 +117,11 @@ Give the lab numbered steps, one admin screen at a time. The usual set:
 Report what was checked and how. Anything not checked on the live store is "not verified yet", never "done".
 
 ## Rules
+
+- **Do not turn a lab away because its card has photos or words on the front.** Before 20 Nov 2026 this skill said the
+  Greeting Card Studio could only take a fixed front; that is no longer true (studio 0.7.2 and later). Check the
+  site's studio version first (console line `[greeting-card-studio] ready <version>`): before 0.7.2, say the
+  studio needs updating and offer to build the library now.
 
 - Designs the lab supplies stay on the lab's site. Do not add the lab's logo, phone number or names as sample
   words in a design meant for its customers: use generic sample words ("The Smith Family", "Your Company").
