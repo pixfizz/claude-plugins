@@ -1,6 +1,6 @@
 ---
 name: price-cards
-description: "px_rates price cards: the JSON on a Pixfizz product that prices custom size, document and booklet products the same way on the website, in OrderHub and at the POS. Use when creating a product priced by size (prints, canvas, banners, magnets, vinyl, foam board, coroplast, any substrate), making a counter-only product that staff order in OrderHub but customers never see on the website, adding a material to an existing custom size product, changing rates, or when OrderHub or the website says a product is not set up or cannot be priced. Trigger for 'px_rates', 'price card', 'rate card', 'priced by area', 'per square foot', 'per square inch', 'custom size', 'counter product', 'OrderHub only', 'POS only', 'hidden product', 'engine', or a px_ product with a wrong or missing price."
+description: "px_rates price cards: the JSON on a Pixfizz product that prices custom size, document and booklet products the same way on the website, in OrderHub and at the POS. Use when creating a product priced by size (prints, canvas, banners, magnets, vinyl, foam board, coroplast, any substrate), setting or changing booklet rates (per page, paper, color, staple or coil binding, covers), making a counter-only product that staff order in OrderHub but customers never see on the website, adding a material to an existing custom size product, changing rates, or when OrderHub or the website says a product is not set up or cannot be priced. Trigger for 'px_rates', 'price card', 'rate card', 'priced by area', 'per square foot', 'per square inch', 'booklet price', 'per page price', 'custom size', 'counter product', 'OrderHub only', 'POS only', 'hidden product', 'engine', or a px_ product with a wrong or missing price."
 ---
 
 # px_rates price cards
@@ -9,8 +9,20 @@ A price card is a JSON value in the product custom field `px_rates`. One engine 
 reads it on the website, in OrderHub and at the POS, so a size priced at the counter and the same
 size bought online always cost the same. There is no Ruby formula on these products.
 
-Platform-level rule (Pixfizz CMS and OrderHub). Authoritative reference: `30_PRICING_ENGINE.md`
-and `45_ORDERHUB.md` in github.com/pixfizz/pixfizz-knowledge. Never invent a rate: rates come
+Platform-level rule (Pixfizz CMS and OrderHub). Authoritative reference: `33_PX_RATES_PRICE_CARDS.md`
+(card format for every mode, engine rules, check list), `30_PRICING_ENGINE.md` and `45_ORDERHUB.md`
+in github.com/pixfizz/pixfizz-knowledge.
+
+## Which engine runs where (24 Nov 2026)
+
+| Mode | What it prices | Website | OrderHub and POS |
+|---|---|---|---|
+| `area` | custom sizes, counter products | yes | yes (engine 4) |
+| `booklet` | booklets: per page or per sheet, papers, covers, bindings | yes | yes (engine 4) |
+| `flat` | documents and copies | yes | yes (engine 4) |
+| `prints`, `forms`, `sheet` | Flat Prints, NCR forms, stickers | yes | not yet: needs engine 5, not installed in OrderHub yet |
+
+A product in a mode OrderHub cannot price sells on the website but cannot be keyed in at the till. Never invent a rate: rates come
 from the lab owner. If one is missing, ask for it; do not guess.
 
 ## Hard rules
@@ -23,9 +35,13 @@ from the lab owner. If one is missing, ask for it; do not guess.
    already has unless Pixfizz tells you otherwise: the website tool bundles its own copy of the
    engine and refuses a card whose number is higher than its copy (the product page then shows
    the product as not set up). If that happens, put the number back.
-3. **Codes must match exactly.** Each `stocks[].code` equals a value code of the `px_stock`
-   variant. Each extra's value key equals a value code of its variant. A mismatch gives the
-   reason `order-line` and no price.
+3. **Codes and names must match.** Each `stocks[].code` equals a value code of the `px_stock`
+   variant, and its `label` equals that value's name. Each extra's value key equals a value code
+   of its variant, and **each extra value carries a `"label"` equal to the value's name** when the
+   name differs from the code (`"2ft":{"grommet":0.75,"label":"Every 2 ft"}`). OrderHub matches
+   the order line by code or name; a value it cannot match gives `order-line` and no price at the
+   till, even though the website prices it. Booklet and document choices (paper, color, binding)
+   are matched by their `label`, so keep labels identical to what the product shows.
 4. **The engine does not check sizes.** Minimum and maximum width and length are the `min` and
    `max` on the `px_width_in` and `px_height_in` variants. Set them on every product.
 5. **Live site.** Show the lab owner the card (old and new) and wait for a clear go before
@@ -37,8 +53,9 @@ from the lab owner. If one is missing, ask for it; do not guess.
 {"name":"<product name>","mode":"area","engine":4,"card_version":"<date and who confirmed the rates>","currency":"USD","unit":"sq_ft","tiering":"whole","stocks":[{"code":"magnet","label":"Magnet","tiers":[{"rate":11}]}],"extras":[]}
 ```
 
-- `unit`: `sq_in` (default) or `sq_ft`. Width and height always arrive in inches; the unit only
-  sets what a rate is per.
+- `unit`: `sq_in` (default) or `sq_ft` (`"engine": 1` is enough), or `sq_cm` / `sq_m` (need
+  `"engine": 2` or higher). Width and height arrive in inches (or mm on metric lines); the unit
+  only sets what a rate is per.
 - `stocks[]`: one entry per material. `tiers[]` are bands in the card unit: `{"to": 4, "rate": 12}`
   then `{"rate": 10}`. `to` is exclusive and the last band has no `to`. One band with no `to` =
   one flat rate.
@@ -56,7 +73,40 @@ from the lab owner. If one is missing, ask for it; do not guess.
 Worked check, `sq_ft`, one band at 11: 12 x 24 in = 288 sq in = 2 sq ft = 22.00. 24 x 36 in =
 6 sq ft = 66.00. Always work three sizes by hand like this and show them to the owner.
 
-## The variants a px_ product needs
+## Card format: mode `booklet`
+
+Two shapes. Read the product's current card first and keep its shape.
+
+**Simple booklet** (`"engine": 3`; `interior.rate_per` is `"page"`, has `bindings`, no `cover`):
+price per booklet = pages x page rate + binding price.
+
+```json
+{"name":"Booklets 5.5 x 8.5","mode":"booklet","engine":3,"trim":{"w":5.5,"h":8.5,"label":"5.5 x 8.5 in"},"bleed":0.125,"printable_margin_in":0,"binding":{"code":"booklet","label":"Booklet","multiple_of":4,"min_pages":4,"pages_per_sheet":4},"overrun":{"pct":0},"interior":{"rate_per":"page","colors":[{"code":"bw","label":"Black & White","desc":"..."},{"code":"color","label":"Full Color","desc":"..."}],"print":{"bw":[{"min":1,"max":9999999,"rate":0.14}],"color":[{"min":1,"max":9999999,"rate":0.24}]},"papers":[{"code":"regular","label":"Regular (20 lb.)","desc":"..."},{"code":"gloss100","label":"Gloss (100 lb.)","desc":"...","print":{"bw":[{"min":1,"max":9999999,"rate":0.18}],"color":[{"min":1,"max":9999999,"rate":0.28}]}}]},"bindings":[{"code":"staple","label":"Staple Binding","desc":"...","bands":[{"min":1,"max":9999999,"price":0}]},{"code":"coil","label":"Coil Binding","desc":"...","bands":[{"min":1,"max":4,"price":3.75},{"min":5,"max":9,"price":3.0},{"min":10,"max":24,"price":2.63},{"min":25,"max":9999999,"price":1.88}]}],"volume_steps":[1,5,10,25,50,100],"defaults":{"int_color":"bw","int_paper":"regular","binding":"staple","copies":1,"blank_at":"obc"}}
+```
+
+- Page rate: `interior.print.<color>`, or the paper's own `print.<color>` when the paper has one.
+  Bands (`min`, `max`, `rate`) count **all pages in the job** (pages x copies), so extra rows can
+  lower the rate for big jobs.
+- Binding: `bindings[].bands` (`min`, `max`, `price`) per booklet, counted on **copies**. 0 = included.
+- Pages round up to `multiple_of` (4); the padded count is priced.
+- Example rates are illustrative. Worked check: 24 pages, 10 copies, Full Color, Gloss, Coil =
+  24 x 0.28 + 2.63 = 9.35 a booklet, 93.50 total.
+
+**Saddle stitch with covers** (`"engine": 2`; has `cover.prints` and `bindery`): inside pages at a
+rate per sheet (4 pages) counted on sheets in the whole run, a separate cover priced per cover by
+cover paper and print, stitching per booklet counted on sheets per booklet, optional overrun.
+Full field list: `33_PX_RATES_PRICE_CARDS.md` section 4b. With a separate cover, an 8-page
+booklet has 1 stitching sheet, so the `bindery` table must start at 1 if that size is sold.
+
+**Bands in booklet cards** start at 1, run on with no gaps (`next min = previous max + 1`) and end
+high (9999999). A count outside every row has no price.
+
+## Documents (`flat`) and other modes
+
+Start from the product's current card and change rates only. Keep every `code`, `label` and the
+card's shape; field lists are in `33_PX_RATES_PRICE_CARDS.md`.
+
+## The variants a px_ product needs (area)
 
 | Code | Type | Purpose |
 |---|---|---|
@@ -104,6 +154,15 @@ Use when the size limits or extras differ from every existing product.
 Never delete and re-import a product to change its rates or materials: edit the card and the
 variant values in place.
 
+## Paste a card the owner prepared
+
+1. Check it is one valid JSON object with `"mode"` and `"engine"`.
+2. Read the product with the connector and compare every material, paper, color, binding and
+   extra in the card with the product's variant values (codes and names, rule 3).
+3. Work three real jobs by hand and show them.
+4. Owner pastes it into the product attribute's `px_rates` field (or you write it on their go),
+   saves, checks the product page shows the same price, then syncs OrderHub and tests at the till.
+
 ## Test at the till
 
 1. In OrderHub, refresh the product catalog so the new product or material appears.
@@ -122,11 +181,12 @@ variant values in place.
 | `engine` | the card needs a newer engine than the website tool or OrderHub has |
 | `mode` | `mode` is not one the engine knows |
 | `unpriced` / `not-priced` | a material or size has no band that covers it |
-| `order-line` | a variant value code does not match a stock or extra code |
+| `order-line` | a variant value on the order line matches no code or label on the card (often an extra value with no `label`) |
 | `bad-unit` | `unit` is not one the engine knows |
 
 ## What needs Pixfizz
 
 - Website custom size tools (the customer-facing size builder) and their landing pages.
-- Raising `"engine"` above 4, or a card mode other than `area` on a new kind of product.
+- Raising `"engine"` above what the website tool and OrderHub run.
+- A new kind of product (a mode or shape no product on the site uses yet).
 - OrderHub not listing a product, or not pricing a card that passes every check above.
