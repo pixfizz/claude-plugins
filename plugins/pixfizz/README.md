@@ -32,6 +32,11 @@ per-unit rule, gap-free ranges, finite caps, `cut_print_quantity` on photo print
 vs `units`, and `(pages - uncounted_pages)` for book pricing. Also covers cart-level Automatic
 Discounts and Extra Fees, and the negative-variant workaround.
 
+**`price-cards`** — `px_rates` price cards, the JSON that prices custom size, document and
+booklet products identically on the website, in OrderHub and at the POS. Card format, the engine
+number rule, and recipes for adding a material or building a counter-only product that staff
+order in OrderHub but customers never see. Command: `/pixfizz:rates`.
+
 **`xml-templates`** — the production specification for a design product. Definition and set
 attributes, the three geometry values that get misread (width, bleed, margin), PDF layers and
 separate-file output, product archetypes, and the FTP fulfillment rules.

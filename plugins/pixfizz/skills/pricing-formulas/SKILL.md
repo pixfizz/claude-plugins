@@ -10,7 +10,8 @@ pricing and for option/variant pricing.
 
 Authoritative source: `30_PRICING_ENGINE.md` in the Pixfizz knowledge base
 (github.com/pixfizz/pixfizz-knowledge). This skill is the working procedure; that file is the
-reference. Never invent a rate or a pattern — if the required idiom is not here or there, say so
+reference. A product priced by size, or any product with a `px_rates` custom field, is not
+priced by a formula: use the `price-cards` skill instead. Never invent a rate or a pattern — if the required idiom is not here or there, say so
 and ask.
 
 ## The four questions to settle before writing anything
