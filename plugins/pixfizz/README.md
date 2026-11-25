@@ -85,7 +85,8 @@ step-by-step diagnosis for files that are missing, misnamed or unreadable.
 
 **`studio-designs`** — bring a lab's own designs into a studio or design product. Which route
 each studio offers today (Greeting Card Studio store designs, the Business Cards site designs file,
-Calendar Studio, the design tool for anything with a template), what to ask the designer for, and
+Calendar Studio own templates and copied designs, Photo Book Studio own books, the design tool for
+anything with a template), where each thumbnail and preview comes from and how to change it, what to ask the designer for, and
 four scripts: read a layered PSD or a finished PDF into photo windows and live text with a proof,
 build a design import on top of a real export of your template, build the Greeting Card Studio
 store library, and build a Business Cards site designs file.

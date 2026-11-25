@@ -5,7 +5,7 @@ the artwork becomes a plate atlas per design (art above a photo gets its own pla
 hand-off map (element name if unique on the page, else its box in page mm) is written in the same pass, so keys always match.
 
 usage: gcs_store_live.py <site tag> <out dir> <export dir> [<export dir> ...]
-  env  OCC=christmas  OCC_NAME=Christmas  MIN_UNITS=25  LIB_V=<date>
+  env  OCC=christmas  OCC_NAME=Christmas  MIN_UNITS=25  LIB_V=<date>  OCC_MAP=<json file {design id: occasion key}>
   export dir = one unpacked design export (__print_theme.yml or __print_product.yml, images/, fonts/)
 Role from the pages: front + back = flat2, outside + inside = fold; orientation from the trimmed face.
 Writes gcs-store-<tag>-designs.json, -a-<key>.webp / -a-<key>-t.webp (atlases), -<key>.webp / -<key>-t.webp (front preview),
@@ -34,6 +34,9 @@ S = 640 / TW
 THUMB_W = {'p': 260, 'l': 364}
 os.makedirs(OUT, exist_ok=True)
 FONTS = {}; PROBLEMS = []; designs = []
+# 0.7.13: OCC_MAP=<json {theme id: occasion key}> gives each design its own occasion (christmas, hanukkah, newyear, seasons,
+# faith: the studio chips, as the MSP designs use them). Designs not in the map take the library occasion (OCC).
+OCCMAP = {str(k): v for k, v in json.load(open(os.environ['OCC_MAP'])).items()} if os.environ.get('OCC_MAP') else {}
 
 def fv(e, k, d=0.0):
     try: return float(e.get(k)) if e.get(k) not in (None, '', 'false') else d
@@ -45,7 +48,7 @@ def norm(xml):
     r = etree.fromstring(xml.encode())
     for e in list(r):
         if (e.get('name') or '').lower() == 'score' or e.tag == 'score': r.remove(e); continue
-        # left/top are the photo's crop offset inside its box, NOT its position; a missing x or y is 0 (seen 20 Nov in Vernon Hills exports)
+        # left/top are the photo's crop offset inside its box, NOT its position; a missing x or y is 0 (seen in real exports, 20 Nov 2026)
         for k in ('x', 'y'):
             if e.get(k) is None: e.set(k, '0')
     return r
@@ -70,14 +73,31 @@ def load_export(ex):
         for fid in os.listdir(os.path.join(ex, 'fonts')): fonts[fid] = os.path.join(ex, 'fonts', fid)
     return themes, imgs, fonts
 
+def option_defaults(t):
+    """Artwork that only a template option puts on the page (Color Theme, Greeting: an image element with no src that the
+    option's default value fills by element substitution). {element name: image src} of each multiple-choice option's default value."""
+    subs = {}
+    for o in t.get('design_options') or []:
+        vals = [v for v in (o.get('option_values') or []) if v.get('published') not in (False, 'false')]
+        if not vals: continue
+        dv = next((v for v in vals if v.get('default') in (True, 'true')), None)
+        if dv is None: continue
+        for s in dv.get('element_substitutions') or []:
+            if s.get('substitution_type') == 'image' and s.get('element_name') and s.get('content'): subs.setdefault(s['element_name'], str(s['content']))
+    return subs
+
 def pages_of(t):
     out = {}
+    subs = option_defaults(t)
     for p in t.get('templates') or []:
         if p.get('layout') in (True, 'true') or p.get('preview') in (True, 'true'): continue
         nm, data = p.get('name'), p.get('data')
         if nm not in ('front', 'back', 'outside', 'inside') or not data: continue   # preview-*, backup and option pages are not card faces
         if isinstance(data, str) and data.strip().startswith('"'): data = yaml.safe_load(data)
         r = norm(data)
+        for e in r:
+            if e.tag == 'image' and not e.get('src') and e.get('name') in subs and not is_live(e):
+                e.set('src', subs[e.get('name')]); print('%s: %s on %s takes its option default %s' % (t.get('code'), e.get('name'), nm, subs[e.get('name')]))
         if nm in out:
             if len(list(r)) == 0: continue          # duplicate empty page (fold-p has a second empty outside)
             if len(list(out[nm])) == 0: out[nm] = r; continue
@@ -236,6 +256,7 @@ for ex in EXPORTS:
         designs.append({'id': 'store-' + key, 'key': key, 'code': code, 'theme': t.get('id'), 'role': fmt + '-' + o, 'formats': [fmts], 'orients': [on],
                         'minUnits': int(os.environ.get('MIN_UNITS', '1')), 'front': P + key, 'name': re.sub(r'\s*(5x7|7x5)\s*(V|H|Flat)?\s*$', '', name).strip(),
                         'live': 1, 'lv': lv, 'map': mp, 'texts': texts})
+        if str(t.get('id')) in OCCMAP: designs[-1]['occ'] = [OCCMAP[str(t.get('id'))]]   # one occasion per design
         print('%-40s %-7s front %d photo(s) %d text(s), %d plate(s)' % (code, fmt + '-' + o, len(fs_), len(ft), len(cells)))
 
 fonts = {}

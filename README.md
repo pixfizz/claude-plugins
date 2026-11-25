@@ -26,7 +26,7 @@ The two plugin systems are separate and do not sync. If you use both, install in
 
 | Plugin | Version | What it covers |
 |---|---|---|
-| **Pixfizz Storefront** (`pixfizz`) | 0.7.0 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and holiday landing pages, your own designs in the studios (PSD or PDF to Pixfizz designs) |
+| **Pixfizz Storefront** (`pixfizz`) | 0.9.0 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and holiday landing pages, your own designs in the studios (PSD or PDF to Pixfizz designs) |
 
 Run `/pixfizz:help` after installing for a menu of everything with example prompts.
 
@@ -41,6 +41,12 @@ packaging or commercial terms - ask your Pixfizz contact for anything commercial
 
 ## Changelog
 
+- **0.9.0** - `studio-designs`: own calendar templates in Calendar Studio and own books and cover
+  designs in Photo Book Studio are now routes; new `references/previews.md` on where each studio
+  thumbnail and preview image comes from and how to change it (a border instead of full bleed, the
+  calendar spiral, preview images); corrected which stores have Greeting Card Studio live fronts;
+  store library builder takes an occasion per design and option-default artwork; files index URLs
+  must be absolute; placeholder text never prints; definition page types match design page names.
 - **0.7.0** - New `studio-designs` skill and `/pixfizz:designs`: bring your own designs into a
   Pixfizz studio or design product from a layered PSD or a finished PDF. Reads photo windows and
   live text, builds a design import from a real export of your template, and covers the routes the

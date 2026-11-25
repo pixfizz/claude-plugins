@@ -1,14 +1,18 @@
 ---
 name: studio-designs
-description: Use when a lab wants to bring its own designs into a Pixfizz studio or design product - greeting cards, holiday cards, birth announcements, business cards, calendars - from a designer's layered file (PSD) or a finished flat file (PDF, AI, PNG, JPG). Triggers on "add our own card designs", "convert this PSD into a Pixfizz design", "put our designs in the Greeting Card Studio", "our own business card designs", "make our calendar designs work in Calendar Studio", "we bought these templates", "turn this PDF into a template", "can customers add their photo to our design", or any PSD, AI or print-ready PDF supplied with a request to sell it as a personalizable product. Covers which route each studio offers today, what to ask the designer for, reading the file into photo windows and live text, building a design import from a real export, the Greeting Card Studio store library and the Business Cards site designs file.
+description: Use when a lab wants to bring, pull or import its own designs into a Pixfizz studio or design product - greeting cards, business cards, calendars, photo book covers - from a layered PSD, a finished flat file (PDF, AI, PNG, JPG) or designs already on its site, or wants to change how a design looks before the customer picks it (studio thumbnail, preview image, calendar spiral, a border instead of full bleed). Triggers on "add our own card designs", "pull our holiday cards into the Greeting Card Studio", "use our own calendars in Calendar Studio", "our own photo book covers", "convert this PSD into a Pixfizz design", "our own business card designs", "we bought these templates", "change the thumbnail of this design", "wrong spiral in the preview", "we cannot print full bleed", or any PSD, AI or print-ready PDF to sell as a personalizable product. Covers the route each studio offers today, designer file prep, building a design import from a real export, studio libraries, and where each thumbnail comes from.
 ---
 
 # Pixfizz studio designs: bringing a lab's own designs in
 
-A lab buys or commissions designs (holiday cards, birth announcements, business cards, calendars) and wants its
-customers to personalize them on its Pixfizz store: add photos, change the words, order. This skill turns the
+A lab buys or commissions designs (holiday cards, birth announcements, business cards, calendars, book covers) and
+wants its customers to personalize them on its Pixfizz store: add photos, change the words, order. This skill turns the
 designer's file into something the platform and the studios can use, and says plainly where a studio cannot take it
 yet.
+
+If the ask is about how a design **looks before the customer picks it** (a gallery thumbnail, a preview image, the
+spiral on a calendar, a border because the lab cannot print to the edge), read `references/previews.md` first: most
+studio thumbnails are drawn from the design, not from an image you can swap.
 
 Everything here is built from the lab's own files and one export from the lab's own site. Nothing is uploaded by
 the scripts. The lab (or you, through the admin) imports and uploads, then checks the result in the design tool and
@@ -22,11 +26,13 @@ Ask which product the design is for, then pick the route from this table. Detail
 | Product | Route today | What the customer gets |
 |---|---|---|
 | Any design product (cards, invitations, announcements, posters, anything with a template) | **Design tool route**: a design on the lab's own template | Opens in the Pixfizz design tool: photos into the windows, words edited in place |
-| Greeting Card Studio, the lab's own card designs, with photo windows and words on the front (the usual case) | **Store designs, live front** (studio 0.7.2+): the lab's designs on its own 5 x 7 flat two-sided or folded card products, plus a library built from the design exports | In the studio next to the Pixfizz designs: photos and words editable on the front, back and inside, the card's own price, paper and envelopes |
+| Greeting Card Studio, the lab's own card designs, with photo windows and words on the front (the usual case) | **Store designs, live front** (where the store's studio file has it, see Rules): the lab's designs on its own 5 x 7 flat two-sided or folded card products, plus a library built from the design exports | In the studio next to the Pixfizz designs: photos and words editable on the front, back and inside, the card's own price, paper and envelopes |
 | Greeting Card Studio, a corporate card whose front is one finished picture | **Store designs, fixed front** (studio 0.5.0+) | Fixed front; logo, photo and message on the back and inside |
 | Business Cards (3.5.0 and later) | **Site designs file**: one JSON plus images on the lab's assets | In the business card tool before the shared designs: the customer types their details, adds a logo or photo |
-| Calendar Studio | **Copy a studio design** on the lab's own calendar template and swap the art | In the studio with the lab's art, month grids and photo layouts kept |
-| Other studios (Photo Book, Collage, Puzzle, Mug, Pet, wall studios) | No own-design intake yet | Say so. Offer the design tool route where the product has a normal template |
+| Calendar Studio, the lab's own calendars as they are (own sizes, grids, products) | **Own calendar templates** (studio 0.6.0+, switched on by Pixfizz per store) | The lab's own calendars in the studio: a photo per month, its own prices and choices |
+| Calendar Studio, the lab's art on the studio's calendars | **Copy a studio design** on the lab's own calendar template and swap the art | In the studio with the lab's art, month grids and photo layouts kept |
+| Photo Book Studio, the lab's own book sizes and cover designs | **Own books** (switched on by Pixfizz per store): designs on the lab's own book templates | The lab's books and covers in the studio, at its own prices |
+| Other studios (Collage, Puzzle, Mug, Pet, wall studios) | No own-design intake yet | Say so. Offer the design tool route where the product has a normal template |
 
 If the lab wants a design in every card type (one-sided, two-sided, folded, portrait and landscape), each format
 is its own design on its own template, and only a layered file can be reflowed into the others. A flat file stays
@@ -106,11 +112,15 @@ Give the lab numbered steps, one admin screen at a time. The usual set:
 
 1. **Import the design**: on the template's page, **Import Design**, pick `IMPORT-design-<code>.tar.gz`. It always
    creates a new design. Read the design list afterwards: a design with the same name as an existing one arrives
-   with `-1` added to its name (the code is unchanged). Imported designs have no preview image until one is set.
+   with `-1` added to its name (the code is unchanged). Imported designs have no preview image until one is set
+   (`references/previews.md`). A design imported unpublished and without a SKU is not in the template page's
+   design list: open it by its id instead of importing again.
 2. **Open it in the design tool** and check every page against the preview: fonts, text position, photo windows,
    nothing cut at the trim. Add a photo to each window. Change each line of text to a long name and a short one.
 3. **For a studio**: upload the library files to Assets and add the studio settings (`references/studios.md`).
-4. **Publish** the design to its collection, then open it on the storefront as a customer would.
+4. **Publish** the design to its collection, then open it on the storefront as a customer would. Before publishing
+   a batch, read what each design really holds (`https://<store>/v1/themes/<design id>.json?sitename=<site>` in a
+   signed-in admin tab returns every page's XML): a design with the right name and the wrong pages is easy to miss.
 5. **Proof before selling**: order one on a test account, or create a project and generate its production PDF, and
    check the print file (bleed, fonts embedded, photos at full resolution).
 
@@ -118,10 +128,18 @@ Report what was checked and how. Anything not checked on the live store is "not 
 
 ## Rules
 
-- **Do not turn a lab away because its card has photos or words on the front.** Before 20 Nov 2026 this skill said the
-  Greeting Card Studio could only take a fixed front; that is no longer true (studio 0.7.2 and later). Check the
-  site's studio version first (console line `[greeting-card-studio] ready <version>`): before 0.7.2, say the
-  studio needs updating and offer to build the library now.
+- **Do not turn a lab away because its card has photos or words on the front.** The Greeting Card Studio takes such
+  designs as store designs with a live front. As of 25 Nov 2026 that part is in the studio file of the stores Pixfizz
+  has set it up on, not yet in the shared studio file every other store runs, and the version number does not tell
+  you which (a store on a higher number can be without it). So: build the library, and before mounting it ask
+  Pixfizz support to confirm the store's studio has store designs with a live front, or to add it. The library is
+  used as built either way.
+- **Words that must print are never placeholders.** A text element with `placeholder="true"` does not print, in the
+  preview or the production file, unless the tool that fills it clears the flag. Keep the flag for prompt text
+  ("enter your text here") only; a greeting that should print untouched ("Merry Christmas") must not carry it. After a
+  test order, check an edited line and an untouched line in the production PDF.
+- **The template definition and the design pages use the same names.** Every `<page type="X">` in the definition needs
+  a design page named X. A mismatch imports without an error and then fails when a customer starts a project.
 
 - Designs the lab supplies stay on the lab's site. Do not add the lab's logo, phone number or names as sample
   words in a design meant for its customers: use generic sample words ("The Smith Family", "Your Company").
@@ -139,6 +157,8 @@ Report what was checked and how. Anything not checked on the live store is "not 
 
 - `references/studios.md`: each route in full, element names per studio, page sizes, studio settings
 - `references/file-prep.md`: what to ask the designer for, and what each kind of file can become
+- `references/previews.md`: where each thumbnail and preview comes from, and how to change it (border instead of
+  full bleed, the calendar spiral, preview images)
 - Platform detail: the Pixfizz knowledge base (github.com/pixfizz/pixfizz-knowledge), `19_XML_TEMPLATE_REFERENCE.md`
   for page elements, `28_TOOL_SETTINGS_REFERENCE.md` for every studio setting, `26_CUSTOM_DESIGN_TOOLS.md` for the
   studios

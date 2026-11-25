@@ -31,8 +31,14 @@ orientation, offered as such). There are two kinds; nearly every retail design i
 
 | Kind | Studio | Front | Back and inside | Builder |
 |---|---|---|---|---|
-| **Live front** | 0.7.2+ | photo windows and words live, art above or below the photos kept | photo windows and words live | `scripts/gcs_store_live.py` from design exports |
+| **Live front** | where set up (below) | photo windows and words live, art above or below the photos kept | photo windows and words live | `scripts/gcs_store_live.py` from design exports |
 | Fixed front | 0.5.0+ | one finished picture (`cover`) | logo, photo and message by fixed names | `scripts/gcs_store_library.py` from a template export |
+
+### Live front: which stores have it
+
+As of 25 Nov 2026 the live front is in the studio file of the stores Pixfizz has set it up on. The shared studio file
+other stores run does not have it yet, whatever its version number says. Ask Pixfizz support to confirm or add it for
+the store before step 7 (Mount). Everything before that step can be done first.
 
 ### Live front: what the studio needs
 
@@ -41,7 +47,10 @@ A design qualifies when all of these hold. The builder checks each one and print
   `outside` and `inside`). Any design code; MSP-origin designs the lab copied onto its own products qualify too.
 - **Photo windows** are image elements with `placeholder="true"` OR a name starting with `placeholder`
   (case-insensitive, e.g. `Placeholder 3`). Anything else is art.
-- **Words** are text elements with `edit="true"`. Text without it is part of the art.
+- **Words** are text elements with `edit="true"`. Text without it is part of the art. Words that must print untouched
+  must not have `placeholder="true"` (such text never prints unless the customer's edit clears the flag).
+- Art that only a template option puts on the page (a Color Theme or Greeting option that fills an image element with
+  no source) is drawn from that option's default value; the builder says so per element.
 - Up to 12 or more photo windows per face is fine; art drawn above a photo (a frame, a bow) is kept above it.
 
 How the builder turns a design into the studio's format (the same method as the MSP designs):
@@ -71,13 +80,17 @@ Export quirks to know (seen in real exports, 20 Nov 2026):
    per design, the file name starts with the site). Unpack each into its own folder.
 3. **Build the library** (needs `pyyaml lxml pillow fonttools brotli`):
    `OCC=christmas OCC_NAME=Christmas MIN_UNITS=<product minimum> python3 scripts/gcs_store_live.py <tag> lib/ <export dirs>`
+   Designs for several occasions in one library: add `OCC_MAP=<file>.json`, a JSON object of design id to occasion
+   key (`christmas`, `hanukkah`, `newyear`, `seasons`, `faith`); designs not listed take `OCC`. A store whose studio
+   does not sort store designs by occasion yet shows them all under `OCC`.
    `<tag>` is short and new per library (e.g. `vh`, `retail`): never reuse the tag of a fixed-front library on the
    same site. Read PROBLEMS: every line is something the customer would see wrong. Fix the design in the admin and
    export again; never edit the output.
 4. **Look before uploading.** Open each front preview (`gcs-store-<tag>-<key>.webp`) next to the design in the admin.
 5. **Upload** every file in `lib/` to the site's Assets (keep the names). Then write
    `gcs-store-<tag>-files.json` as `{"v": "<date>", "files": {"<asset name>": "<asset url>", ...}}` from the asset
-   list (`assets_list` in the connector), upload it, read its URL.
+   list (`assets_list` in the connector), upload it, read its URL. Every URL in the index is absolute
+   (`https://...`): a relative `/fz/...` path belongs to one host and answers 403 from the storefront.
 6. **Publish** the designs to one collection kept out of the menu (the studio reads it by name).
 7. **Mount**: on the studio page (Pages, the instance holding `product/greeting-card-studio`) add
    `gcs_store_collection: '<collection>'`, `gcs_store_products: 'flat2-p:<id>,flat2-l:<id>'` (one entry per card type
@@ -165,7 +178,44 @@ Business Cards 3.5.0 and later. The lab's designs are listed first in the design
    Finished view, add to cart. Check the console for "[business-cards]" errors (a refused file or a missing image
    says so there).
 
+## Calendar Studio: the lab's own calendar templates
+
+Calendar Studio 0.6.0 and later (November 2026; live on one store when this was written, so test every step). The
+lab's own calendars run in the studio as they are: its own products, templates, sizes, month grids, prices and
+choices. Pixfizz switches this on per store in the studio page config (`"mode":"own"` in `#cs-config`). Your part is
+to check the templates fit, send Pixfizz the list, and test.
+
+**What each calendar needs**
+- One design per product. A version with a cover is its own product next to the version without.
+- The month page is the page type the template definition prints for the months. Read the definition with XML
+  comments stripped: a template can keep older pages and commented-out cover sets that never reach a project.
+- One photo window per month page: an image with `placeholder="true"`. Other images on the page (grid cell art)
+  are kept as art and are never filled.
+- A cover only where the definition prints one. A back cover is not shown or filled in the studio and prints as
+  the template has it.
+- Month names are drawn as the template's sample text has them (full, title case, or three letters).
+- Holidays and personal dates are offered only on calendars whose month page has those calendar fields.
+
+**Not offered in this mode:** the 1, 2 or 4 photo layouts, the caption line, date stickers, Colors, Monday-start
+twins, the room view and the design tool link.
+
+**What to send Pixfizz, per calendar:** product id and design id, wall or desk, the name and one line of text for
+its card, the size label, the binding (`previews.md`), and the variant code of any extra choice the customer makes
+(for example production time).
+
+**Check on a hidden page before linking it,** desktop and phone, every calendar:
+- its card shows the right name, size and price; the with-cover switch changes product and price;
+- add photos: one per month (and the cover); Add to cart stays off while any page is empty;
+- the extra choice changes the price and is on the cart line;
+- open the cart project's pages: cover and 12 months filled, grid art untouched, back cover as the template;
+- generate the production PDF of a test order: month names, holidays on the right days, page count.
+
+To take a calendar out of the studio, remove its row from the studio collection; unticking Published on the row
+does not hide it (0.6.1).
+
 ## Calendar Studio: copy a studio design and swap the art
+
+For a lab that wants its own art on the studio's calendars (the studio's sizes, grids and photo layouts).
 
 The studio reads designs by code `<template code>-cs-<design>` from the collection in `cs_collection`, each with
 pages `cover`, `image`, `calendar-month`, `back-cover` (wall) or `calendar-month` (desk), photo frames named
@@ -184,8 +234,39 @@ So the route keeps everything the studio reads and only changes the look:
 
 Not built yet: a script that swaps the art into a calendar design export automatically.
 
+## Photo Book Studio: the lab's own books and cover designs
+
+For a store that sells its own book lines (sizes, cover designs, prices) in the studio. Pixfizz switches this on per
+store with the `collections` block of `#pbs-config` on the studio page (`28_TOOL_SETTINGS_REFERENCE.md`, Photo Book
+Studio); do not write that block yourself. Your part is the designs.
+
+**What the studio needs**
+- Each book size is its own product on its own template. A cover design is one design per size on that template,
+  published to the studio's design collection.
+- Every design has its **Linked Layouts** (the page layouts and cover layouts designs). An import does not create
+  the links: without them the studio has no layouts.
+- Page books (pages `cover`, `page01`, `page02` ...) need `"layflat":"false"` in the block (studio 4.0.4+); the
+  default is lay-flat spreads. Tell Pixfizz which the books are.
+- On the cover, an image named `placeholder` with a sample photo is the customer's cover photo (studio 4.0.5+);
+  any other image is fixed art. Editable text is the title the customer types.
+
+**Adding a cover design**
+1. On the book template, **Copy** a design that already works in the studio (Copy keeps the linked layouts), then
+   give the copy its name and code.
+2. Change the cover page only: the art, the title text, the photo window. Lay it out from that size's own cover
+   page (spine and hinge differ per size), keeping the page tag and the spine and hinge elements.
+3. Repeat per size. The same art is a separate design on every size.
+4. Before publishing, read each design's cover page (`/v1/themes/<design id>.json?sitename=<site>`) and look at
+   `/v1/themes/<design id>/preview.webp?hide_placeholders=false&height=900`: a copy that still shows the old cover
+   is the usual miss.
+5. Publish to the studio's design collection. Check in the studio: the cover in the gallery for every size, the
+   cover photo, the title, the price in the store's own currency, Add to cart, and the production PDF of a test
+   order (cover and spine).
+
+Not built yet: a script that writes a cover onto every size from one design file.
+
 ## Studios with no own-design intake yet
 
-Photo Book Studio, Collage Studio, Puzzle Studio, Mug Studio, Pet Studio, Stationery Studio, the wall studios and
+Collage Studio, Puzzle Studio, Mug Studio, Pet Studio, Stationery Studio, the wall studios and
 the T-shirt Studio show only the designs Pixfizz ships for them. Tell the lab so, and that the request is noted.
 Where the product also exists as a normal design product, the design tool route works today.
