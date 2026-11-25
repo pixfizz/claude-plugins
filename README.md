@@ -11,7 +11,7 @@ Full setup walkthrough, including which Claude product to use and how to connect
 
 **Claude desktop app (Cowork)**
 
-Customize → Plugins → Add marketplace → `pixfizz/claude-plugins`, then install **Pixfizz Storefront**.
+Customize → Plugins → Add marketplace → `pixfizz/claude-plugins`, then install **Pixfizz Skills**.
 
 **Claude Code, in a terminal**
 
@@ -26,7 +26,7 @@ The two plugin systems are separate and do not sync. If you use both, install in
 
 | Plugin | Version | What it covers |
 |---|---|---|
-| **Pixfizz Storefront** (`pixfizz`) | 0.9.1 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and holiday landing pages, your own designs in the studios (PSD or PDF to Pixfizz designs) |
+| **Pixfizz Skills** (`pixfizz`) | 0.9.2 | Liquid and templates, pricing formulas, variants and template options, XML product templates, template resizing, Shopify + Pixfizz, conversion UX, storefront copy, photo book layouts, Lightspeed/Vend import, setup and launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and holiday landing pages, your own designs in the studios (PSD or PDF to Pixfizz designs) |
 
 Run `/pixfizz:help` after installing for a menu of everything with example prompts.
 
@@ -41,6 +41,8 @@ packaging or commercial terms - ask your Pixfizz contact for anything commercial
 
 ## Changelog
 
+- **0.9.2** - Renamed from Pixfizz Storefront to **Pixfizz Skills**. Display name only: the install
+  commands, the `/pixfizz:` commands and existing installs are unchanged.
 - **0.9.1** - `studio-designs`: own calendars in Calendar Studio and own books in Photo Book Studio are
   self-serve. The skill now carries the studio page config for both (every key, its format, an example
   block, the console checks) and builds on an unlinked page first.

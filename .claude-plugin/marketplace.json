@@ -13,7 +13,7 @@
 			"name": "pixfizz",
 			"source": "./plugins/pixfizz",
 			"description": "Build, launch and improve a Pixfizz storefront: Liquid templating patterns, pricing formulas, variants and template options, XML product templates, template resizing, Shopify integration, conversion UX, storefront copy, photo book layouts, product import, launch sequencing, live site health checks, fulfillment setup, seasonal campaigns and bringing a lab's own designs into the studios.",
-			"version": "0.9.1",
+			"version": "0.9.2",
 			"author": {
 				"name": "Pixfizz Ltd"
 			}

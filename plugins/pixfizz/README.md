@@ -1,4 +1,4 @@
-# Pixfizz Storefront
+# Pixfizz Skills
 
 Claude skills for building and improving a Pixfizz Shopper storefront.
 
