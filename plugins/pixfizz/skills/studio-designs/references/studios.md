@@ -182,8 +182,8 @@ Business Cards 3.5.0 and later. The lab's designs are listed first in the design
 
 Calendar Studio 0.6.0 and later (November 2026; live on one store when this was written, so test every step). The
 lab's own calendars run in the studio as they are: its own products, templates, sizes, month grids, prices and
-choices. Pixfizz switches this on per store in the studio page config (`"mode":"own"` in `#cs-config`). Your part is
-to check the templates fit, send Pixfizz the list, and test.
+choices. It is switched on in the studio page config (`"mode":"own"` in `#cs-config`), which you write yourself:
+check the templates fit, build the page, test it, then link it.
 
 **What each calendar needs**
 - One design per product. A version with a cover is its own product next to the version without.
@@ -199,11 +199,42 @@ to check the templates fit, send Pixfizz the list, and test.
 **Not offered in this mode:** the 1, 2 or 4 photo layouts, the caption line, date stickers, Colors, Monday-start
 twins, the room view and the design tool link.
 
-**What to send Pixfizz, per calendar:** product id and design id, wall or desk, the name and one line of text for
-its card, the size label, the binding (`previews.md`), and the variant code of any extra choice the customer makes
-(for example production time).
+**Collect per calendar:** product id and design id, wall or desk, the name and one line of text for its card, the
+size label, the binding (`previews.md`), and the variant code of any extra choice the customer makes (for example
+production time).
 
-**Check on a hidden page before linking it,** desktop and phone, every calendar:
+**Write the studio page.** Make a new Pages entry (Custom Types, Pages) with its own `page_path` that no menu links
+to yet. Never change the page content of a studio page customers already use without keeping a copy of it first.
+`page_content` is the studio snippet tag followed by one JSON block.
+
+In the snippet tag (all other settings as in `28_TOOL_SETTINGS_REFERENCE.md`, Calendar Studio):
+- `cs_collection`: the collection the calendar designs are published to.
+- `cs_products`: `role:product id` pairs, comma separated. In this mode a role is any short name of your own, one
+  per calendar. A role ending `-cv` is the same calendar with a cover (`wall` and `wall-cv`); the studio then shows
+  one card with a With cover switch.
+
+After the snippet tag, on one line, with your own roles, ids and words:
+
+```html
+<script type="application/json" id="cs-config">{"mode":"own","themes":"wall:00000,wall-cv:00000,desk:00000","families":"wall:wall|desk:desk","names":"wall:Wall calendar|desk:Desk calendar","lines":"wall:A photo for every month|desk:Stands on a desk","sizes":"wall:11 x 17 in|desk:8 x 6 in","variant":"production"}</script>
+```
+
+| Key | Holds | Format |
+|---|---|---|
+| `mode` | Switches own templates on | `own` |
+| `themes` | The design each role opens | `role:design id`, comma separated; every role in `cs_products` needs one |
+| `families` | One card per calendar, in the order shown; a family is the role name without `-cv` | `family:wall` or `family:desk`, separated by a vertical bar |
+| `names`, `lines`, `sizes` | The card's name, its one line of text and its size label | `family:text`, separated by a vertical bar; no vertical bar inside a text |
+| `variant` | The variant type code of one extra choice (leave the key out when there is none) | A variant code; its value names and prices come from the product |
+| `coil` | Binding drawn in the preview | `spiral` (default) or `wireo` |
+| `lang` | Interface language | A language code, where the studio has that table |
+
+The block must be valid JSON: straight double quotes, no line breaks inside a value, no comma after the last pair.
+On the page, the console line `[calendar-studio] ready` shows the version (0.6.0 or later is needed); errors name
+the problem (`#cs-config is not valid JSON`, `families is empty`, a role with no theme, a text that is not
+`role:value`). If the store has no Calendar Studio page or the version is older, ask Pixfizz support.
+
+**Check on the unlinked page before linking it,** desktop and phone, every calendar:
 - its card shows the right name, size and price; the with-cover switch changes product and price;
 - add photos: one per month (and the cover); Add to cart stays off while any page is empty;
 - the extra choice changes the price and is on the cart line;
@@ -236,19 +267,49 @@ Not built yet: a script that swaps the art into a calendar design export automat
 
 ## Photo Book Studio: the lab's own books and cover designs
 
-For a store that sells its own book lines (sizes, cover designs, prices) in the studio. Pixfizz switches this on per
-store with the `collections` block of `#pbs-config` on the studio page (`28_TOOL_SETTINGS_REFERENCE.md`, Photo Book
-Studio); do not write that block yourself. Your part is the designs.
+For a store that sells its own book lines (sizes, cover designs, prices) in the studio. It is switched on with the
+`collections` block of `#pbs-config` on the studio page (`28_TOOL_SETTINGS_REFERENCE.md`, Photo Book Studio), which
+you write yourself, together with the designs.
 
 **What the studio needs**
-- Each book size is its own product on its own template. A cover design is one design per size on that template,
-  published to the studio's design collection.
+- Each book size is its own product on its own template. A cover design is one published design per size on that
+  template. The same design on another size has the same code apart from the size at the end (`classic-8x8`,
+  `classic-10x10`): that is how the studio knows they are one design.
+- The size comes from the product's `ga_size` custom field, or from the product name when that is empty
+  (`29x29`).
 - Every design has its **Linked Layouts** (the page layouts and cover layouts designs). An import does not create
   the links: without them the studio has no layouts.
 - Page books (pages `cover`, `page01`, `page02` ...) need `"layflat":"false"` in the block (studio 4.0.4+); the
-  default is lay-flat spreads. Tell Pixfizz which the books are.
+  default is lay-flat spreads. With the wrong value the page stays on "Setting up your studio".
 - On the cover, an image named `placeholder` with a sample photo is the customer's cover photo (studio 4.0.5+);
   any other image is fixed art. Editable text is the title the customer types.
+
+**Write the studio page.** Make a new Pages entry (Custom Types, Pages) with its own `page_path` that no menu links
+to yet. Never change the page content of a studio page customers already use without keeping a copy of it first.
+`page_content` is the JSON block on one line, then the studio snippet tag (`{% snippet 'product/photo-book-studio' %}`;
+the settings for the standard books are not needed in this mode). With your own book lines, ids and words:
+
+```html
+<script type="application/json" id="pbs-config">{"collections":{"source":"collections","ranges":"hardcover:00000,00000;softcover:00000","rangeNames":"Hard cover|Soft cover","rangeLines":"Printed cover, thick pages|Light and flexible","layflat":"false","unit":"in"}}</script>
+```
+
+| Key (inside `collections`) | Holds | Format |
+|---|---|---|
+| `source` | Switches own books on | `collections` |
+| `ranges` | Your book lines and the products (sizes) in each; required | `line:product id,product id`, lines separated by a semicolon |
+| `rangeNames`, `rangeLines` | Each line's name and its one line of text, in the order of `ranges` | Texts separated by a vertical bar |
+| `layflat` | Lay-flat spreads or page books | `true` (default) or `false` |
+| `unit` | The unit of the product sizes | `in` (default), `cm` or `mm` |
+| `moneyDecimals` | Show decimals in prices | `true` (default) or `false` |
+| `defaultProduct` | The size the studio opens on | A product id from `ranges` |
+| `exclude` | Collections whose designs the studio must not show | Collection names, comma separated |
+| `blankFrom` | The one collection a design with code `blank-canvas` is taken from | A collection name |
+
+The studio shows every published design of the products in `ranges`, from all the store's collections except those
+in `exclude`. The block must be valid JSON (straight double quotes, no comma after the last pair). On the page, the
+console line `[photo-book-studio] ready` must read `source collections` and list your lines. "The studio could not
+load" with a console line about a missing `pbs_collection` means the block was not read: check its id, that it is
+valid JSON and that it sits before the snippet tag. If the store has no Photo Book Studio, ask Pixfizz support.
 
 **Adding a cover design**
 1. On the book template, **Copy** a design that already works in the studio (Copy keeps the linked layouts), then
@@ -259,7 +320,8 @@ Studio); do not write that block yourself. Your part is the designs.
 4. Before publishing, read each design's cover page (`/v1/themes/<design id>.json?sitename=<site>`) and look at
    `/v1/themes/<design id>/preview.webp?hide_placeholders=false&height=900`: a copy that still shows the old cover
    is the usual miss.
-5. Publish to the studio's design collection. Check in the studio: the cover in the gallery for every size, the
+5. Publish to a collection the studio reads (any collection not named in `exclude`). Check in the studio, on the
+   unlinked page first, desktop and phone: the cover in the gallery for every size, the
    cover photo, the title, the price in the store's own currency, Add to cart, and the production PDF of a test
    order (cover and spine).
 
